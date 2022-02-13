@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@linkcat/core": ["libs/core/src/index.ts"]
+      "@linkcat/core": ["libs/core/src/index.ts"],
+      "@linkcat/utils": ["libs/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
