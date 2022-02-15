@@ -29,4 +29,11 @@ export class DefaultQueue<I> implements Queue<I>{
   }
 }
 
+export async function AsyncForEach<T>(array:Array<T>, callback:(item:T,index:number,array:Array<T>)=>void) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
 
+
+export type Constructor<T,A extends any[]=any[]> = {new(...args:A):T};

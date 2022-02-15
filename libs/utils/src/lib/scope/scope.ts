@@ -17,7 +17,16 @@ export class Scope{
           cloneObj.pairs[key] = this.pairs[key];
         }
     }
+    cloneObj.count = this.count;
     return cloneObj;
+  }
+  merge(scope:Scope){
+    Object.keys(scope.pairs).forEach(key => {
+      if(this.pairs[key] == undefined){
+        this.count++;
+      }
+      this.pairs[key] =scope.pairs[key];
+    });
   }
   constructor(){}
 }
