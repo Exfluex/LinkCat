@@ -7,7 +7,7 @@ import { ExpressEndPoint, NotifyService, RenderService, Service } from "../servi
 import { AnnotateService } from "../service/services/annotate_service";
 import { EndPointService } from "../service/services/endpoint_service";
 import { FakeNotifyService } from "../service/services/notify/fake_notify_service";
-import { PuppeteeerService } from "../service/services/puppeteer_service/puppeteer_service";
+import { PuppeteerService } from "../service/services/puppeteer_service/puppeteer_service";
 import { CardRenderService } from "../service/services/render_service/card_render_service";
 
 
@@ -172,7 +172,7 @@ export namespace Context{
     "annotate":AnnotateService,
     "notify":FakeNotifyService,
     "render":CardRenderService,
-    "page":PuppeteeerService,
+    "page":PuppeteerService,
   }
   export type BuildinServiceType = "endpoint"|"annotate"|"notify"|"render";
 
