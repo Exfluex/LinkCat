@@ -39,9 +39,6 @@ export class App<CustomService extends string = never> extends Context {
     await this.processFlow.traverse(async (position,name)=>{
       await this.services[name].start();
     })
-    // await this.services["endpoint"].start();
-    // await this.services["page"].start();
-    // await this.services["annotate"].start();
   }
   consume(data: Payload) {
     this.consume0(data);
@@ -76,22 +73,6 @@ export class App<CustomService extends string = never> extends Context {
       if (service.apply) this.middleware(service.apply.bind(service))
         Context.services[key] = service;
     });
-    // if(Context.services["endpoint"] == undefined){
-    //   let expressEndpoint = new ExpressEndPoint(this);
-    //   let expressMiddleware = expressEndpoint.apply.bind(expressEndpoint);
-    //   this.middleware(expressMiddleware);
-    // }
-
-    // if(Context.services["annotate"] == undefined){
-    //   let annotateService = new AnnotateService(this);
-    //   let annotateMiddleware = annotateService.apply.bind(annotateService);
-    //   this.middleware(annotateMiddleware);
-    // }
-    // if(Context.services["puppeteer"] == undefined){
-    //   let puppeteerService = new PuppeteeerService(this);
-    //   let puppeteerMiddleware = puppeteerService.apply.bind(puppeteerService);
-    //   this.middleware(puppeteerMiddleware);
-    // }
     this.middleware((ctx, payload) => {
       console.log(ctx);
       console.log(payload);

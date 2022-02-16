@@ -159,9 +159,6 @@ export namespace Context{
   export interface Services{
     [name:string]:Service;
     endpoint:EndPointService;
-    // notify:NotifyService;
-    // scope:ScopeService;
-    // render:RenderService;
     annotate:AnnotateService;
   }
   export let services:{[name:string]:Service} = {
@@ -178,12 +175,7 @@ export namespace Context{
     "page":PuppeteeerService,
   }
   export type BuildinServiceType = "endpoint"|"annotate"|"notify"|"render";
-  // export type ServiceRegistry<T> = {[F in keyof T]:Service};
 
   export type ScopeString = string;
   export type Scope = Record<string,string>;
-
-  // export type Selector = ((selectors:string)=>boolean);
-  // export type SelectionString = string;
-  // export type Selection = Record<string,Matcher>;
 }

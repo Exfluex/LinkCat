@@ -24,10 +24,3 @@ export namespace CRegistry{
     id:ID;
   }
 }
-
-// export interface CRegistry<ID,I extends CRegistry.Item<ID>>{
-//   register(item:I,data:any):this;
-//   unregister(id:ID):this;
-//   traverse(traverse:Registry.traverseFn<ID>):this;
-//   find(id:ID):Registry.Item<ID>[];
-// }

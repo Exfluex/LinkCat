@@ -1,5 +1,4 @@
 import { AsyncForEach, DefaultNumberRegistry } from "@linkcat/utils";
-;
 import { Annotation } from "../../annotation";
 import { AnnotationDefinitionRegistry, annotationRegistry, Context, Next } from "../../context/context"
 import { DefaultMatcherFactory, DefaultMatcherProto, ExactMatcherFactory, PathMatcherFactory } from "../../matcher";
@@ -16,8 +15,7 @@ import { ResourceOriginFillerPlugin } from "../../plugins/originfiller";
 
 
 export interface AnnotateService {
-  // annotate(ctx:Context,payload:Payload):number;
-  // resolve(payload:Payload):number;
+
 }
 
 
@@ -113,10 +111,7 @@ export namespace AnnotateService {
   export const GeneralResolvers = Symbol("*")
   export type Middleware = (ctx: Context, payload: Payload) => number;
 
-  // export const  PluginMiddleware:Middleware = (ctx,payload){
 
-  //   return 0;
-  // }
   export type Env = { ctx: Context, payload: Payload };
   //TODO retrieve these as TemplateRegistry
   export let TaskTypes: {
@@ -176,14 +171,3 @@ export namespace AnnotateService {
     }
   }
 }
-
-
-// class ResourceOriginPlugin{
-//   constructor(ctx:Context){
-//     let wild = ctx.on("*");
-//     let builder = wild.build().define("resource.origin","来源",Annotation.BaseTypeDefinition.RawText,(ctx,payload)=>{
-//       payload.annotations["resource.origin"]=payload.origin;
-//     }).matcher(new PathMatcherFactory(0,{resolver:-1,goal:"*",priority:0,name:"Resource.Origin.Matcher"})).alias("资源链接");
-//     builder.register();
-//   }
-// }

@@ -18,7 +18,6 @@ export class MetaRetrieverPlugin {
       console.log("multi-children resolver");
     });
     scoped.define("linkcat.buildin.title", "标题", Annotation.BaseTypeDefinition.RawText, async (ctx, payload) => {
-      // payload.plugin["$puppeteer"].$("title");
         payload.set("linkcat.buildin.title",await payload.global.$page.$Content("title"));
     });
     scoped.define("linkcat.buildin.favicon", "图标", Annotation.BaseTypeDefinition.RawText, (ctx, payload) => {

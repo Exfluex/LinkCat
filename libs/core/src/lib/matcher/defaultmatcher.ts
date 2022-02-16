@@ -74,8 +74,7 @@ export class ExactMatcherFactory implements DefaultMatcherFactory<ExactMatcher,E
 
 }
 export interface PathMatcherConfig extends DefaultMatcherProto.Config{
-  // path:string;
-  // callback?:PathMatcherCallback;
+
 }
 
 type PickFunction<T,M extends string> = M extends keyof T ? (T[M] extends Function ? T[M]: never):never;
@@ -89,7 +88,6 @@ export class PathMatcher implements DefaultMatcherProto<PathMatcherConfig>{
       return false;
     return this.withParam?res.params:true;
   };
-  // com/github/www/:AccountOrProject/:Repository
   constructor(public id:number,public config:PathMatcherConfig){
     this.matchFn = match(this.config.goal);
   }
