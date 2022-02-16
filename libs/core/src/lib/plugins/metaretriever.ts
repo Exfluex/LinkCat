@@ -34,20 +34,20 @@ export class MetaRetrieverPlugin {
     });
     const protocolRegex = /([^\/]+):(.+)/;
     const protocol:Pair={
-      "http":"linkcat.buildin.prococol.http",
-      "https":"linkcat.buildin.prococol.https",
-      "file":"linkcat.buildin.prococol.file",
-      "ftp":"linkcat.buildin.prococol.ftp",
+      "http":"linkcat.buildin.protocol.http",
+      "https":"linkcat.buildin.protocol.https",
+      "file":"linkcat.buildin.protocol.file",
+      "ftp":"linkcat.buildin.protocol.ftp",
     }
-    scoped.define("linkcat.buildin.protocol", "协议", "linkcat.buildin.prococol.ftp;linkcat.buildin.prococol.http;linkcat.buildin.prococol.https;linkcat.buildin.prococol.file;linkcat.buildin.prococol.unknow", (ctx, payload) => {
+    scoped.define("linkcat.buildin.protocol", "协议", "linkcat.buildin.protocol.ftp;linkcat.buildin.protocol.http;linkcat.buildin.protocol.https;linkcat.buildin.protocol.file;linkcat.buildin.protocol.unknown", (ctx, payload) => {
       let res = protocolRegex.exec(payload.origin);
-      payload.set("linkcat.buildin.protocol",(res)?(protocol[res[1]] as any)??"linkcat.buildin.prococol.unknow":"linkcat.buildin.prococol.unknow");
+      payload.set("linkcat.buildin.protocol",(res)?(protocol[res[1]] as any)??"linkcat.buildin.protocol.unknown":"linkcat.buildin.protocol.unknown");
     });
-    scoped.define("linkcat.buildin.prococol.ftp", "文件传输协议", Annotation.BaseTypeDefinition.Boolean);
-    scoped.define("linkcat.buildin.prococol.http", "超文本传输协议", Annotation.BaseTypeDefinition.Boolean);
-    scoped.define("linkcat.buildin.prococol.https", "安全超文本传输协议", Annotation.BaseTypeDefinition.Boolean);
-    scoped.define("linkcat.buildin.prococol.file", "本地文件", Annotation.BaseTypeDefinition.Boolean);
-    scoped.define("linkcat.buildin.prococol.unknow","未知协议",Annotation.BaseTypeDefinition.Boolean);
+    scoped.define("linkcat.buildin.protocol.ftp", "文件传输协议", Annotation.BaseTypeDefinition.Boolean);
+    scoped.define("linkcat.buildin.protocol.http", "超文本传输协议", Annotation.BaseTypeDefinition.Boolean);
+    scoped.define("linkcat.buildin.protocol.https", "安全超文本传输协议", Annotation.BaseTypeDefinition.Boolean);
+    scoped.define("linkcat.buildin.protocol.file", "本地文件", Annotation.BaseTypeDefinition.Boolean);
+    scoped.define("linkcat.buildin.protocol.unknown","未知协议",Annotation.BaseTypeDefinition.Boolean);
     scoped.register();
   }
   deps: string[] = ["annotate", "puppeteer"];
