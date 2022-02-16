@@ -23,7 +23,7 @@ export class DefaultNumberRegistry<Item extends Registry.Item<number>> implement
   generateId(){
     return this.maxId++;
   }
-  traverse(traverse: Registry.traverseFn<number>,data?:any): this {
+  traverse(traverse: Registry.traverseFn<Item>,data?:any): this {
     for (const key in this.items) {
       if (Object.prototype.hasOwnProperty.call(this.items, key)) {
           const item = this.items[key];

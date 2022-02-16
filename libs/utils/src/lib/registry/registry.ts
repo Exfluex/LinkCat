@@ -7,13 +7,13 @@ export namespace Registry{
   }
   export namespace Item{
   }
-  export type traverseFn<ID> = (item:Item<ID>,data:any)=>void;
+  export type traverseFn<Item> = (item:Item,data:any)=>void;
 }
 
 export interface Registry<ID,I extends Registry.Item<ID>>{
   register(item:I):this;
   unregister(id:ID):this;
-  traverse(traverse:Registry.traverseFn<ID>):this;
+  traverse(traverse:Registry.traverseFn<I>):this;
   find(id:ID):Registry.Item<ID>[];
 }
 
@@ -24,10 +24,3 @@ export namespace CRegistry{
     id:ID;
   }
 }
-
-// export interface CRegistry<ID,I extends CRegistry.Item<ID>>{
-//   register(item:I,data:any):this;
-//   unregister(id:ID):this;
-//   traverse(traverse:Registry.traverseFn<ID>):this;
-//   find(id:ID):Registry.Item<ID>[];
-// }

@@ -1,0 +1,34 @@
+{
+  "root": "libs/plugins/github",
+  "sourceRoot": "libs/plugins/github/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:package",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs//plugins/github",
+        "tsConfig": "libs/plugins/github/tsconfig.lib.json",
+        "packageJson": "libs/plugins/github/package.json",
+        "main": "libs/plugins/github/src/index.ts",
+        "assets": ["libs/plugins/github/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/plugins/github/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/plugins/github"],
+      "options": {
+        "jestConfig": "libs/plugins/github/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

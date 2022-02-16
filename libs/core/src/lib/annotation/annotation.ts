@@ -26,15 +26,13 @@ export class Annotation {
 }
 
 
-// export const AnnotationValueTypes=
 export namespace Annotation {
 
 
 
   export class Definition {
     key: string = "";
-    // static defaultDefinitionValue = new Definition("boolean","true");
-    static Seperator: string = '&';
+    static Separator: string = '&';
     dependent?: [Resolver, DataProcessor][];
     aliases: string[] = [];
     dup: number = 0;
@@ -42,7 +40,6 @@ export namespace Annotation {
     description: string = "";
     basic:boolean=false;
     isValue:boolean=false;
-    // factory: DefaultMatcherFactory<DefaultMatcherProto, DefaultMatcherProto.Config> = new ExactMatcherFactory(-1, { priority: 0, name: "default", goal: "_", resolver: -1 });
     constructor(key: string, name: string) {
       this.key = key;
       this.addAlias(name);
@@ -76,14 +73,11 @@ export namespace Annotation {
       return new Annotation(this.key, this.aliases[0]);
     }
   }
-  // export type Value = Annotaion[]|Annotaion|string|boolean;
-  // export type DataProcessor = (ctx:Context,payload:Payload)=>number;
   export class DataProcessor implements Task.DataProcessor<Context, Payload>{
     name: string = "";
     key: string = "";
     priority: number = 0;
     active: boolean = true;
-
     process: (ctx: Context, payload: Payload) => number = () => 0;
     constructor(public resolver: Resolver) { };
   }
@@ -189,14 +183,13 @@ export namespace Annotation {
       let service = this._service;
       if ((def = this.ctx.annotations.get(key)[0]) == undefined) {
         def = new Annotation.Definition(key, name);
-        // this.ctx.annotations.register(def);
       }
       def.addAlias(name);
       if (service.AnnotationDependents[def.key]) {
         if (factory && service.AnnotationDependents[def.key].factory.config.priority < factory.config.priority) {
           let pre = service.AnnotationDependents[def.key].factory;
           service.AnnotationDependents[def.key].factory = factory;
-          pre.traverse(item => factory.gen((item as DefaultMatcherProto).config));
+          pre.traverse(item => factory.gen(item.config));
         }
       }
       else {
@@ -224,11 +217,6 @@ export namespace Annotation {
           }
         }
         this._service.pend(new Task(`Annotation.DefValueResolve:[${key}]=${valueTypes.toString()}`, dataProcessor))
-        //pending
-        // let val;
-        // valueTypes.forEach(key=>{
-        //   this.ctx.annotations.get(key)[0]
-        // })
       }
 
       this._curdef = def;
@@ -265,7 +253,6 @@ export namespace Annotation {
       service.mount(this._resolver);
       this._defs.forEach(def => {
         service.registry.register(def);
-        // service.AnnotationDependents[def.key].factory = def.factory;
       });
     }
     alias(alias: string) {
@@ -275,27 +262,3 @@ export namespace Annotation {
   }
 }
 export type AnnotationResolver = (ctx: Context, payload: Payload) => void;
-
-
-
-// export namespace Annotator{
-// }
-
-// export class Annotator{
-//   constructor(private selector:Annotator.Selector,private resolver:Annotation.Resolver,private matcher:PriorityMatcher){}
-//   annotate(ctx:Context,payload:Payload){
-//     // perform before annotate hooks
-//     // perform after annotate hooks
-//     return
-//   }
-//   name(){
-//     this.resolver.
-//   }
-//   isMath(payload:Payload){
-//     for (const key in this.selector) {
-//       if (Object.prototype.hasOwnProperty.call(this.selector, key) && Object.prototype.hasOwnProperty.call(payload, key)) {
-//         this.selector[key].match(payload[key]);
-//       }
-//     }
-//   }
-// }

@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@linkcat/card-components": ["libs/card-render-component/src/index.ts"],
       "@linkcat/core": ["libs/core/src/index.ts"],
+      "@linkcat/plugin-linkcat-github": ["libs/plugins/github/src/index.ts"],
       "@linkcat/utils": ["libs/utils/src/index.ts"]
     }
   },

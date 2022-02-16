@@ -1,8 +1,5 @@
-import { Service } from "..";
+import { Service } from "../service";
 import { Context } from "../../context";
-// export interface EndpointService{
-
-// }
 
 export interface EndPointService{
 

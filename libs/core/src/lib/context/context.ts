@@ -7,7 +7,7 @@ import { ExpressEndPoint, NotifyService, RenderService, Service } from "../servi
 import { AnnotateService } from "../service/services/annotate_service";
 import { EndPointService } from "../service/services/endpoint_service";
 import { FakeNotifyService } from "../service/services/notify/fake_notify_service";
-import { PuppeteeerService } from "../service/services/puppeteer_service/puppeteer_service";
+import { PuppeteerService } from "../service/services/puppeteer_service/puppeteer_service";
 import { CardRenderService } from "../service/services/render_service/card_render_service";
 
 
@@ -94,7 +94,6 @@ export class Context{
     let p ={id,name:plugin.name,gen:plugin};
     Context.plugins.register(p);
     this.env = p;
-    new plugin(this,{});
     this.env=null;
   }
   constructor(){
@@ -159,9 +158,6 @@ export namespace Context{
   export interface Services{
     [name:string]:Service;
     endpoint:EndPointService;
-    // notify:NotifyService;
-    // scope:ScopeService;
-    // render:RenderService;
     annotate:AnnotateService;
   }
   export let services:{[name:string]:Service} = {
@@ -175,15 +171,10 @@ export namespace Context{
     "annotate":AnnotateService,
     "notify":FakeNotifyService,
     "render":CardRenderService,
-    "page":PuppeteeerService,
+    "page":PuppeteerService,
   }
   export type BuildinServiceType = "endpoint"|"annotate"|"notify"|"render";
-  // export type ServiceRegistry<T> = {[F in keyof T]:Service};
 
   export type ScopeString = string;
   export type Scope = Record<string,string>;
-
-  // export type Selector = ((selectors:string)=>boolean);
-  // export type SelectionString = string;
-  // export type Selection = Record<string,Matcher>;
 }

@@ -1,5 +1,4 @@
 import { AsyncForEach, DefaultNumberRegistry } from "@linkcat/utils";
-;
 import { Annotation } from "../../annotation";
 import { AnnotationDefinitionRegistry, annotationRegistry, Context, Next } from "../../context/context"
 import { DefaultMatcherFactory, DefaultMatcherProto, ExactMatcherFactory, PathMatcherFactory } from "../../matcher";
@@ -16,16 +15,16 @@ import { ResourceOriginFillerPlugin } from "../../plugins/originfiller";
 
 
 export interface AnnotateService {
-  // annotate(ctx:Context,payload:Payload):number;
-  // resolve(payload:Payload):number;
+
 }
 
 
 export class AnnotateService extends Service implements TaskLoop<Context, Payload>{
   active: boolean = false;
-  start(): void {
+  async start(): Promise<void> {
     this.active = true;
-    this.loopUntilEmpty(this.app, new Payload(this.app), {});
+    this.pendByType("Add Plugins",{});
+    await this.loopUntilEmpty(this.app, new Payload(this.app), {});
   }
   stop(): void {
     this.active = false;
@@ -89,12 +88,12 @@ export class AnnotateService extends Service implements TaskLoop<Context, Payloa
       if (Object.prototype.hasOwnProperty.call(resolver.scope.pairs, key)) {
         if (this.AnnotationDependents[key] == undefined) {
           this.AnnotationDependents[key] = {
-            factory: new ExactMatcherFactory(-1, { priority: 0, name: "default", goal: "_", resolver: -1 }),
+            factory: new ExactMatcherFactory(-1, { priority: -1, name: "default", goal: "_", resolver: -1 }),
             fillers: [],
 
           }
         }
-        this.AnnotationDependents[key].factory.gen({ goal: resolver.scope.pairs[key], resolver: resolver.id, priority: 0, name: key });
+        this.AnnotationDependents[key].factory.gen({ goal: resolver.scope.pairs[key], resolver: resolver.id, priority: 0, name: key,} as any);
       }
     }
 
@@ -113,15 +112,22 @@ export namespace AnnotateService {
   export const GeneralResolvers = Symbol("*")
   export type Middleware = (ctx: Context, payload: Payload) => number;
 
-  // export const  PluginMiddleware:Middleware = (ctx,payload){
 
-  //   return 0;
-  // }
   export type Env = { ctx: Context, payload: Payload };
   //TODO retrieve these as TemplateRegistry
   export let TaskTypes: {
     [type: string]: (data: any) => Task<Context, Payload>;
   } = {
+    "Add Plugins":(data: Env) => {
+      return new DefaultTask("Add Plugins", {
+        process: async (ctx, payload) => {
+          await Context.plugins.traverse(plugin=>{
+            ctx.env = plugin;
+            new plugin.gen(ctx,{});
+          })
+        }
+      })
+    },
     "Add General Resolvers": ({ service }: { service: AnnotateService } & Env) => {
       return new DefaultTask("Add General Resolvers", {
         process: (ctx, payload) => {
@@ -135,6 +141,8 @@ export namespace AnnotateService {
     "Add Resolver Execution": ({ resolver }: { resolver: Annotation.Resolver } & Env) => {
       return new DefaultTask("Add Resolver Executeion", {
         process: async (ctx, payload) => {
+          ctx.env = resolver;
+          payload.current =  payload.plugin[resolver.id];
           if (resolver.preparers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
           if (resolver.filler)
@@ -148,6 +156,8 @@ export namespace AnnotateService {
             );
           if (resolver.finalizers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
+          ctx.env = resolver;
+          payload.current =null;
         }
       })
     },
@@ -164,26 +174,19 @@ export namespace AnnotateService {
           if (fillers.length > 0) {
             let filler = fillers[0];
             let resolver = filler.resolver;
+            ctx.env = resolver;
+            payload.current =  payload.plugin[resolver.id];
             if (resolver.preparers)
               await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
             await filler.process(ctx, payload);
             if (resolver.finalizers)
               await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
             ctx.services.annotate.pendByType("Add Matcher Check", { ctx, payload, def });
+            ctx.env = null;
+            payload.current = null;
           }
         }
       })
     }
   }
 }
-
-
-// class ResourceOriginPlugin{
-//   constructor(ctx:Context){
-//     let wild = ctx.on("*");
-//     let builder = wild.build().define("resource.origin","来源",Annotation.BaseTypeDefinition.RawText,(ctx,payload)=>{
-//       payload.annotations["resource.origin"]=payload.origin;
-//     }).matcher(new PathMatcherFactory(0,{resolver:-1,goal:"*",priority:0,name:"Resource.Origin.Matcher"})).alias("资源链接");
-//     builder.register();
-//   }
-// }
