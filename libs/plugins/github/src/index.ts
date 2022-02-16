@@ -1,1 +1,1 @@
-export * from './lib/-plugins-github';
+export * from './plugin'
