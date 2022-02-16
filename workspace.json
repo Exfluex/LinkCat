@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "-plugins-github": "libs/plugins/github",
     "card-render-component": "libs/card-render-component",
     "core": "libs/core",
     "render-cypress-card-render-component-e2e": "apps/render-cypress/card-render-component-e2e",
