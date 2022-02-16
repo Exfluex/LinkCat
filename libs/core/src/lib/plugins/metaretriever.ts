@@ -50,14 +50,4 @@ export class MetaRetrieverPlugin {
   deps: string[] = ["annotate", "puppeteer"];
 }
 type Pair = {[key:string]:string};
-export type ObjHasKey<Key extends string>= string extends Key?never:Key extends `${infer AnnoKey}`?{[P in AnnoKey]:string}:never;
-export interface Define{
-  <Key extends string,Anns extends {[key in Key]:string}>(key:Key,ann:Anns):void;
-}
-let d:Define=(s,a)=>{
-  return
-};
-d("sssss",{sssss:"sss"});
-
-let a:ObjHasKey<"sssss">;
 
