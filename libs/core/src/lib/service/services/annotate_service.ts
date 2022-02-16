@@ -130,6 +130,7 @@ export namespace AnnotateService {
     "Add Resolver Execution": ({ resolver }: { resolver: Annotation.Resolver } & Env) => {
       return new DefaultTask("Add Resolver Executeion", {
         process: async (ctx, payload) => {
+          ctx.env = resolver;
           if (resolver.preparers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
           if (resolver.filler)
@@ -143,6 +144,7 @@ export namespace AnnotateService {
             );
           if (resolver.finalizers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
+          ctx.env = resolver;
         }
       })
     },
@@ -159,12 +161,14 @@ export namespace AnnotateService {
           if (fillers.length > 0) {
             let filler = fillers[0];
             let resolver = filler.resolver;
+            ctx.env = resolver;
             if (resolver.preparers)
               await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
             await filler.process(ctx, payload);
             if (resolver.finalizers)
               await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
             ctx.services.annotate.pendByType("Add Matcher Check", { ctx, payload, def });
+            ctx.env = null;
           }
         }
       })
