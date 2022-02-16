@@ -1,0 +1,30 @@
+{
+  "root": "apps/render-cypress/card-render-component-e2e",
+  "sourceRoot": "apps/render-cypress/card-render-component-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/render-cypress/card-render-component-e2e/cypress.json",
+        "devServerTarget": "card-render-component:storybook"
+      },
+      "configurations": {
+        "ci": {
+          "devServerTarget": "card-render-component:storybook:ci"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/render-cypress/card-render-component-e2e/**/*.{js,ts}"
+        ]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["card-render-component"]
+}

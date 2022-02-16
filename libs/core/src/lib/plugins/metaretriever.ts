@@ -1,8 +1,6 @@
 import { Annotation } from "../annotation";
 import { Context } from "../context";
-import { PathMatcherFactory } from "../matcher";
 import { Plugin } from "../plugin";
-import { PluginType, WithDep } from "../plugin/plugin";
 
 
 export namespace MetaRetrieverPlugin {

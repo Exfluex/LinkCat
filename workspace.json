@@ -1,7 +1,9 @@
 {
   "version": 2,
   "projects": {
+    "card-render-component": "libs/card-render-component",
     "core": "libs/core",
+    "render-cypress-card-render-component-e2e": "apps/render-cypress/card-render-component-e2e",
     "server": "apps/server",
     "ui": "apps/ui",
     "ui-e2e": "apps/ui-e2e",
