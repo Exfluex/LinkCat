@@ -3,12 +3,12 @@
  * This is only a minimal backend to get started.
  */
 
-import { App } from "@linkcat/core";
-import { PuppeteeerService } from "libs/core/src/lib/service/services/puppeteer_service/puppeteer_service";
+import { App,PuppeteerService } from "@linkcat/core";
+
 
 
 let app = new App();
-app.service("page",PuppeteeerService);
+app.service("page",PuppeteerService);
 app.start();
 // import * as puppeteer from 'puppeteer'
 
