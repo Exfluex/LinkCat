@@ -78,7 +78,6 @@ export namespace Annotation {
     key: string = "";
     priority: number = 0;
     active: boolean = true;
-
     process: (ctx: Context, payload: Payload) => number = () => 0;
     constructor(public resolver: Resolver) { };
   }

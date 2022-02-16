@@ -92,7 +92,7 @@ export class AnnotateService extends Service implements TaskLoop<Context, Payloa
 
           }
         }
-        this.AnnotationDependents[key].factory.gen({ goal: resolver.scope.pairs[key], resolver: resolver.id, priority: 0, name: key });
+        this.AnnotationDependents[key].factory.gen({ goal: resolver.scope.pairs[key], resolver: resolver.id, priority: 0, name: key,} as any);
       }
     }
 

@@ -14,7 +14,7 @@ export class MetaRetrieverPlugin {
   constructor(ctx: Context, config: Plugin.Config) {
     //TODO localize
 
-    let scoped = ctx.onPage("resource.origin=http([s]{0,1})/(.*)").language("zh-cn").build().prepare((ctx, payload) => {
+    let scoped = ctx.onPage("resource.origin=:protocol(http|https)/:rest(.*)").language("zh-cn").build().prepare((ctx, payload) => {
       console.log("multi-children resolver");
     });
     scoped.define("linkcat.buildin.title", "标题", Annotation.BaseTypeDefinition.RawText, async (ctx, payload) => {

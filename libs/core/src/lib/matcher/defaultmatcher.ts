@@ -14,7 +14,7 @@ export const defaultCallback:MatcherCallback=(matcher,env)=>{
     payload.plugin[config.resolver][Payload.Count]+=1;
   }
   let pluginScopeData = payload.plugin[config.resolver];
-  pluginScopeData[matcher.config.name]=data??"";
+  pluginScopeData[matcher.config.name]=data??null;
   let service = ctx.services.annotate;
   let resolver = service.resolverRegistry.find(matcher.config.resolver)[0] as Annotation.Resolver;
   if(resolver && pluginScopeData[Payload.Count] == (resolver.scope.count??-1)){
@@ -74,19 +74,17 @@ export class ExactMatcherFactory implements DefaultMatcherFactory<ExactMatcher,E
 
 }
 export interface PathMatcherConfig extends DefaultMatcherProto.Config{
-
+  withParam?:boolean;
 }
 
 type PickFunction<T,M extends string> = M extends keyof T ? (T[M] extends Function ? T[M]: never):never;
-type PathMatcherCallback = PickFunction<PathMatcherFactory,"_callback">;
 export class PathMatcher implements DefaultMatcherProto<PathMatcherConfig>{
   matchFn:MatchFunction;
-  withParam:boolean=false;
   match(target:string){
     let res = this.matchFn(target);
     if(res == false)
-      return false;
-    return this.withParam?res.params:true;
+      return null;
+    return res.params;
   };
   constructor(public id:number,public config:PathMatcherConfig){
     this.matchFn = match(this.config.goal);
@@ -113,8 +111,9 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
     let num  =0;
     this.prior.forEach(async matcher=>{
       let res = matcher.match(target);
-      if(res != false){
+      if(res != null){
         num++;
+        env.data = res;
         let cb = matcher.config.callback??this._callback;
         cb(matcher,env);
       }
@@ -139,8 +138,9 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
     }
     leaf.matchers.forEach(matcher =>{
       let res = matcher.match(target);
-      if(res != false){
+      if(res != null){
         num++;
+        env.data = res;
         let cb = matcher.config.callback??this._callback;
         cb(matcher,env);
       }

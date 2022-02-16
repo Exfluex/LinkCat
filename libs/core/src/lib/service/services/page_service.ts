@@ -18,7 +18,7 @@ export abstract class PageService extends Service {
 export abstract class PageHelperFiller {
   name = "puppeteer";
   constructor(ctx: Context) {
-    let scope = ctx.on("resource.origin=http([s]{0,1})/(.*)");
+    let scope = ctx.on("resource.origin=:protocol(http|https)/:rest(.*)");
     let builder = scope.build().define("$page", "PageService", Annotation.BaseTypeDefinition.Boolean, async (ctx, payload) => {
       let helper = await this.gen(ctx, payload);
       if(helper){
