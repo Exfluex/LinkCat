@@ -8,7 +8,7 @@ export class PuppeteerService extends PageService {
   static browser: puppeteer.Browser;
   private readonly regex = /^http([s]{0,1})(?:\/(.*))[\/#\?]?$/i;
   config: any = {
-    timeout: 50
+    timeout: 500000000
   };
   active: boolean = false;
   async start(): Promise<number> {
@@ -42,8 +42,9 @@ class PuppeteerPlugin extends PageHelperFiller {
           }
         }
         catch (error) {
+          console.log(error);
         }
-        return "";
+        return `Cannot Fetch Data[${selector}]`;
       },
       raw: async (selector) => {
         return page.waitForSelector(selector, service.config);
