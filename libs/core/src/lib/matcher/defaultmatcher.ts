@@ -64,7 +64,7 @@ export class ExactMatcherFactory implements DefaultMatcherFactory<ExactMatcher,E
   unregister(id: number): this {
     throw new Error("Method not implemented.");
   }
-  traverse(traverse: Registry.traverseFn<number>): this {
+  traverse(traverse: Registry.traverseFn<ExactMatcher>): this {
     this.matchers.forEach(matcher=>traverse(matcher,{}));
     return this;
   }
@@ -169,7 +169,7 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
   unregister(id: number): this {
     return this;
   }
-  traverse(traverse: Registry.traverseFn<number>): this {
+  traverse(traverse: Registry.traverseFn<PathMatcher>): this {
     return this;
   }
   find(id: number): Registry.Item<number>[] {

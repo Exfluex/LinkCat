@@ -189,7 +189,7 @@ export namespace Annotation {
         if (factory && service.AnnotationDependents[def.key].factory.config.priority < factory.config.priority) {
           let pre = service.AnnotationDependents[def.key].factory;
           service.AnnotationDependents[def.key].factory = factory;
-          pre.traverse(item => factory.gen((item as DefaultMatcherProto).config));
+          pre.traverse(item => factory.gen(item.config));
         }
       }
       else {
