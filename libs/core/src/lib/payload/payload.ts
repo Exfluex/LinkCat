@@ -1,9 +1,6 @@
-import { names } from "@nrwl/devkit";
-import { Page } from "puppeteer";
-import { Annotation } from "../annotation";
-import { annotationRegistry, Context } from "../context";
+import { Context } from "../context";
 import { AnnotateService } from "../service";
-import { FakePageHelperFiller, PageHelper } from "../service/services/page_service";
+import { PageHelper } from "../service/services/page_service";
 
 
 
@@ -36,6 +33,7 @@ export interface Payload<A extends string,V extends string=string> extends Paylo
 export namespace Payload {
   export const Count = Symbol("count");
   export interface Scoped {
+    current:any;
     global: Pair<string,any> & {
       "$page": PageHelper;
     };

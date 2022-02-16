@@ -94,7 +94,6 @@ export class Context{
     let p ={id,name:plugin.name,gen:plugin};
     Context.plugins.register(p);
     this.env = p;
-    new plugin(this,{});
     this.env=null;
   }
   constructor(){

@@ -21,9 +21,10 @@ export interface AnnotateService {
 
 export class AnnotateService extends Service implements TaskLoop<Context, Payload>{
   active: boolean = false;
-  start(): void {
+  async start(): Promise<void> {
     this.active = true;
-    this.loopUntilEmpty(this.app, new Payload(this.app), {});
+    this.pendByType("Add Plugins",{});
+    await this.loopUntilEmpty(this.app, new Payload(this.app), {});
   }
   stop(): void {
     this.active = false;
@@ -87,7 +88,7 @@ export class AnnotateService extends Service implements TaskLoop<Context, Payloa
       if (Object.prototype.hasOwnProperty.call(resolver.scope.pairs, key)) {
         if (this.AnnotationDependents[key] == undefined) {
           this.AnnotationDependents[key] = {
-            factory: new ExactMatcherFactory(-1, { priority: 0, name: "default", goal: "_", resolver: -1 }),
+            factory: new ExactMatcherFactory(-1, { priority: -1, name: "default", goal: "_", resolver: -1 }),
             fillers: [],
 
           }
@@ -117,6 +118,16 @@ export namespace AnnotateService {
   export let TaskTypes: {
     [type: string]: (data: any) => Task<Context, Payload>;
   } = {
+    "Add Plugins":(data: Env) => {
+      return new DefaultTask("Add Plugins", {
+        process: async (ctx, payload) => {
+          await Context.plugins.traverse(plugin=>{
+            ctx.env = plugin;
+            new plugin.gen(ctx,{});
+          })
+        }
+      })
+    },
     "Add General Resolvers": ({ service }: { service: AnnotateService } & Env) => {
       return new DefaultTask("Add General Resolvers", {
         process: (ctx, payload) => {
@@ -131,6 +142,7 @@ export namespace AnnotateService {
       return new DefaultTask("Add Resolver Executeion", {
         process: async (ctx, payload) => {
           ctx.env = resolver;
+          payload.current =  payload.plugin[resolver.id];
           if (resolver.preparers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
           if (resolver.filler)
@@ -145,6 +157,7 @@ export namespace AnnotateService {
           if (resolver.finalizers)
             await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
           ctx.env = resolver;
+          payload.current =null;
         }
       })
     },
@@ -162,6 +175,7 @@ export namespace AnnotateService {
             let filler = fillers[0];
             let resolver = filler.resolver;
             ctx.env = resolver;
+            payload.current =  payload.plugin[resolver.id];
             if (resolver.preparers)
               await AsyncForEach<Annotation.DataProcessor>(resolver.preparers, async proc => await proc.process(ctx, payload));
             await filler.process(ctx, payload);
@@ -169,6 +183,7 @@ export namespace AnnotateService {
               await AsyncForEach<Annotation.DataProcessor>(resolver.finalizers, async proc => await proc.process(ctx, payload));
             ctx.services.annotate.pendByType("Add Matcher Check", { ctx, payload, def });
             ctx.env = null;
+            payload.current = null;
           }
         }
       })
