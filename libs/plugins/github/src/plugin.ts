@@ -20,7 +20,7 @@ export class GithubPlugin{
     builder.define("linkcat.github.watch","Watch",Annotation.BaseTypeDefinition.RawText,async (ctx,payload)=>{
       payload.set("linkcat.github.watch",await payload.global.$page.$Content("svg.octicon-eye ~ strong"));
     })
-    builder.define("linkcat.github.fork","Watch",Annotation.BaseTypeDefinition.RawText,async (ctx,payload)=>{
+    builder.define("linkcat.github.fork","Fork",Annotation.BaseTypeDefinition.RawText,async (ctx,payload)=>{
       payload.set("linkcat.github.fork",await payload.global.$page.$Content("svg.octicon-repo-forked ~ strong"));
     })
     builder.register();
