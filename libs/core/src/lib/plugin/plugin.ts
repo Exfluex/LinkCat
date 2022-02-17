@@ -19,7 +19,7 @@ export interface Plugin{
 }
 
 export type Constructor<T> = new (ctx:Context,config:T)=>void;
-export type PluginType = Constructor<Plugin.Config>;
+export type PluginType = Constructor<any>;
 export type FunctionPlugin<T> = (ctx:Context,config:T)=>void;
 export interface Plugin extends Registry.Item<number>{
   id:number;

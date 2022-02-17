@@ -4,11 +4,12 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nrwl/node:package",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/core",
         "main": "libs/core/src/index.ts",
+        "packageJson": "libs/core/package.json",
         "tsConfig": "libs/core/tsconfig.lib.json",
         "assets": ["libs/core/*.md"]
       }
