@@ -10,9 +10,13 @@
   },
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^1.8.3",
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "@nrwl/next": "13.8.1",
     "core-js": "^3.6.5",
     "express": "4.17.2",
+    "framer-motion": "^6.2.6",
     "next": "12.0.7",
     "path-to-regexp": "^6.2.0",
     "puppeteer": "^13.3.1",
