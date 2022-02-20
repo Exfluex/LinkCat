@@ -2,6 +2,10 @@
   "version": 2,
   "projects": {
     "-plugins-github": "libs/plugins/github",
+    "blockcat": "apps/blockcat",
+    "blockcat-card-comoponent-lib": "libs/blockcat-card-comoponent-lib",
+    "blockcat-card-comoponent-lib-e2e": "apps/blockcat-card-comoponent-lib-e2e",
+    "blockcat-e2e": "apps/blockcat-e2e",
     "card-render-component": "libs/card-render-component",
     "core": "libs/core",
     "render-cypress-card-render-component-e2e": "apps/render-cypress/card-render-component-e2e",

@@ -1,0 +1,30 @@
+{
+  "root": "apps/blockcat-card-comoponent-lib-e2e",
+  "sourceRoot": "apps/blockcat-card-comoponent-lib-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/blockcat-card-comoponent-lib-e2e/cypress.json",
+        "devServerTarget": "blockcat-card-comoponent-lib:storybook"
+      },
+      "configurations": {
+        "ci": {
+          "devServerTarget": "blockcat-card-comoponent-lib:storybook:ci"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/blockcat-card-comoponent-lib-e2e/**/*.{js,ts}"
+        ]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["blockcat-card-comoponent-lib"]
+}

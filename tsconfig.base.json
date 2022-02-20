@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@linkcat/blockcat-card-comoponent-lib": [
+        "libs/blockcat-card-comoponent-lib/src/index.ts"
+      ],
       "@linkcat/card-components": ["libs/card-render-component/src/index.ts"],
       "@linkcat/core": ["libs/core/src/index.ts"],
       "@linkcat/plugin-linkcat-github": ["libs/plugins/github/src/index.ts"],
