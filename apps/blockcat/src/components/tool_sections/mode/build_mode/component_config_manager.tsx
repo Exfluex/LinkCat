@@ -2,9 +2,8 @@ import { Divider, Box, VStack, Text } from '@chakra-ui/react';
 import {
   CardRenderConfig,
   PositionableBlockProps,
-} from '../../data/card_render_config';
-import { BlockConfigManger } from './block_config_manager';
-import { CssPropertyCard } from './property_type_card';
+} from '../../../../data/card_render_config';
+import { CssPropertyCard } from './css_property_manager';
 import { TextPropertyManager } from './text_property_manager';
 
 interface ComponentConfigManagerProps {

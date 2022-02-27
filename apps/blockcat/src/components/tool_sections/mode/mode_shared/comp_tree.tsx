@@ -11,8 +11,8 @@ import {
 } from 'react-complex-tree';
 import {
   DirectionMapper,
-} from '../../data/card_render_config';
-import { addComponent, useAppDispatch, useAppSelector } from '../../store';
+} from '../../../../data/card_render_config';
+import { addComponent, useAppDispatch, useAppSelector } from '../../../../store';
 export function ComponentsTree() {
   const components = useAppSelector((state) => state.renderblock.components);
   const [treeData] = useState(ComponentGroupTreeAdapter(components));

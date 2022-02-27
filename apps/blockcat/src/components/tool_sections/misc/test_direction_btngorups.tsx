@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Grid, GridItem } from '@chakra-ui/react';
-import { changeFocusedComponent, useAppDispatch } from '../../store';
+import { changeFocusedComponent, useAppDispatch } from '../../../store';
 
 export function TestDirectionButtonGroups() {
   const dispatch = useAppDispatch();

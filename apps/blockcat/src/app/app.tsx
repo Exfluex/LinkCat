@@ -1,4 +1,4 @@
-import { FullView } from "../components/tool_sections/window";
+import { FullView } from "../components/tool_sections/framework/window";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 

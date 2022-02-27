@@ -1,6 +1,6 @@
 import { Box,Text, Flex, BoxProps } from '@chakra-ui/react';
-import { PositionableBlockProps } from '../../data/card_render_config';
-import { DictionaryManager } from './dictionary_manager';
+import { PositionableBlockProps } from '../../../../data/card_render_config';
+import { DictionaryManager } from '../../composite/dictionary_manager';
 
 
 interface CssPropertyCardProps extends BoxProps{

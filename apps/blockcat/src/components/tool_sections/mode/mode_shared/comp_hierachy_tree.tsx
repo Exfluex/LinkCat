@@ -6,14 +6,14 @@ import {
   ControlledTreeEnvironment,
   DraggingPosition,
 } from 'react-complex-tree';
-import { CardRenderConfig } from '../../data/card_render_config';
+import { CardRenderConfig } from '../../../../data/card_render_config';
 import {
   changeFocusedComponent,
   moveComponent,
   useAppDispatch,
   useAppSelector,
   useCurrentRenderBlock,
-} from '../../store';
+} from '../../../../store';
 
 export function ComponentHierachyTree() {
   const currentRenderBlock = useCurrentRenderBlock();

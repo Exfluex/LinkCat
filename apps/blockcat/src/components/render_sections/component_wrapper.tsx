@@ -1,3 +1,4 @@
+import { Skeleton } from '@chakra-ui/react';
 import React, { ReactNode, useEffect, useRef } from 'react';
 import { PositionableBlockProps } from '../../data/card_render_config';
 import {
@@ -36,7 +37,7 @@ export function ComponentWrapper({
         })
       );
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFocused, blockPorps.css]);
   const events = {
     onClick: (ev) => {
@@ -44,15 +45,25 @@ export function ComponentWrapper({
       dispatch(changeFocusedComponent({ id: blockPorps.id }));
     },
   };
-  return (
-    <>
-      {React.createElement(
-        node.node,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
-        { ...blockPorps.css, ref: compRef, ...events },
-        node.type === 'end' ? undefined : children ?? blockPorps.text
-      )}
-    </>
-  );
+  if (blockPorps.textType === 'none') {
+    return React.createElement(
+      node.node,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      { ...blockPorps.css, ref: compRef, ...events },
+      node.type === 'end' ? undefined : children ?? blockPorps.text
+    );
+  } else {
+    return (
+      <Skeleton m={1}>
+        {React.createElement(
+          node.node,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          //@ts-ignore
+          { ...blockPorps.css, ref: compRef, ...events },
+          node.type === 'end' ? undefined : children ?? blockPorps.text
+        )}
+      </Skeleton>
+    );
+  }
 }

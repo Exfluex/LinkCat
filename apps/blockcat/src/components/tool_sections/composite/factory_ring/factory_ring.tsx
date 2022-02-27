@@ -4,7 +4,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiPlus } from 'react-icons/fi';
 import { tokenToString } from 'typescript';
-import { MotionBox, MotionBoxProps } from '../../motioned';
+import { MotionBox, MotionBoxProps } from '../../../motioned';
 
 //TODO Make it better. Extract it as A individual component
 export interface FactoryRingProps {

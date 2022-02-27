@@ -9,8 +9,8 @@ import {
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { modComponent, useAppDispatch } from '../../store';
-import { KeyValueRow } from './composite/property_row';
+import { modComponent, useAppDispatch } from '../../../store';
+import { KeyValueRow } from './property_row';
 const MotionIconButton = motion(IconButton);
 interface DictionaryManagerProps extends BoxProps {
   dictionary?: {

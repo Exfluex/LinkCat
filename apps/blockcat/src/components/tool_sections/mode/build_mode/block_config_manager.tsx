@@ -1,7 +1,7 @@
 import { Box, HStack, Divider,Text } from "@chakra-ui/react";
-import { CardRenderConfig } from "../../data/card_render_config";
-import { modifyRenderBlock, useAppDispatch } from "../../store";
-import { EditableRow } from "./composite/editable_row";
+import { CardRenderConfig } from "../../../../data/card_render_config";
+import { modifyRenderBlock, useAppDispatch } from "../../../../store";
+import { EditableRow } from "../../composite/editable_row";
 
 
 interface BlockConfigMangerProps{

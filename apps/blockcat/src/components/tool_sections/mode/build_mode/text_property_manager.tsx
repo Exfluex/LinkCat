@@ -10,10 +10,10 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { AiFillSave } from 'react-icons/ai';
-import { PositionableBlockProps } from '../../data/card_render_config';
-import { ComponentsList, TextType } from '../../data/component';
-import { modComponentText, useAppDispatch } from '../../store';
-import { KeyValueRow } from './composite/property_row';
+import { PositionableBlockProps } from '../../../../data/card_render_config';
+import { ComponentsList, TextType } from '../../../../data/component';
+import { modComponentText, useAppDispatch } from '../../../../store';
+import { KeyValueRow } from '../../composite/property_row';
 
 interface TextPropertyManagerProps extends BoxProps {
   focused: PositionableBlockProps;

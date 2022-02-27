@@ -1,5 +1,5 @@
 import { Box, BoxProps, Divider, Flex, HStack, Text } from '@chakra-ui/react';
-import { useCurrentRenderBlock, useFocusedComponent } from '../../store';
+import { useCurrentRenderBlock, useFocusedComponent } from '../../../../store';
 import { BlockConfigManger } from './block_config_manager';
 import { ComponentConfigManager } from './component_config_manager';
 
@@ -12,7 +12,7 @@ export function ComponentPropertyManager(props: ComponentPropertyManagerProps) {
     <Box {...props}>
       <Flex direction={'column'}>
         <Divider />
-        <BlockConfigManger currentRenderBlock={currentRenderBlock} />
+        {currentRenderBlock && <BlockConfigManger currentRenderBlock={currentRenderBlock} />}
         {focusedComponent && (
           <ComponentConfigManager
             currentRenderBlock={currentRenderBlock}
