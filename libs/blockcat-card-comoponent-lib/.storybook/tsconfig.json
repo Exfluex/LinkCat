@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    // "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": true,
     "outDir": ""
   },
   "files": [
@@ -15,5 +15,5 @@
     "../**/*.spec.tsx",
     "../**/*.spec.jsx"
   ],
-  "include": ["../src/**/*", "*.js"]
+  "include": ["../src/**/*", "*.js", "../../../apps/blockcat/src/components/render_sections"]
 }
