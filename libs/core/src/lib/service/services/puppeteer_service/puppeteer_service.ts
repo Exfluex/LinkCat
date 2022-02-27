@@ -10,7 +10,7 @@ export class PuppeteerService extends PageService {
   config: any = {
     timeout: 500000000
   };
-  active: boolean = false;
+  active = false;
   async start(): Promise<number> {
     this.active = true;
     PuppeteerService.browser = await puppeteer.launch({ executablePath: "F:\\Program2022\\Projects\\LinkCat\\linkcat\\node_modules\\puppeteer\\.local-chromium\\win64-950341\\chrome-win\\chrome.exe" });
@@ -37,7 +37,7 @@ class PuppeteerPlugin extends PageHelperFiller {
         try {
           const element = await page.waitForSelector(selector, service.config); // select the element
           if (element != null) {
-            let value = await element.evaluate(el => el.textContent); // grab the textContent from the element, by evaluating this function in the browser context
+            const value = await element.evaluate(el => el.textContent); // grab the textContent from the element, by evaluating this function in the browser context
             return value ?? `Cannot Fetch Data[${selector}]`;
           }
         }

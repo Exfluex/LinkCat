@@ -31,15 +31,15 @@ export namespace Annotation {
 
 
   export class Definition {
-    key: string = "";
-    static Separator: string = '&';
+    key = "";
+    static Separator = '&';
     dependent?: [Resolver, DataProcessor][];
     aliases: string[] = [];
-    dup: number = 0;
+    dup = 0;
     _value: Definition[] = [];
-    description: string = "";
-    basic:boolean=false;
-    isValue:boolean=false;
+    description = "";
+    basic=false;
+    isValue=false;
     constructor(key: string, name: string) {
       this.key = key;
       this.addAlias(name);
@@ -74,10 +74,10 @@ export namespace Annotation {
     }
   }
   export class DataProcessor implements Task.DataProcessor<Context, Payload>{
-    name: string = "";
-    key: string = "";
-    priority: number = 0;
-    active: boolean = true;
+    name = "";
+    key = "";
+    priority = 0;
+    active = true;
     process: (ctx: Context, payload: Payload) => number = () => 0;
     constructor(public resolver: Resolver) { };
   }
@@ -86,7 +86,7 @@ export namespace Annotation {
     type: Resolver.Type = Resolver.Type.Filler;
     static defaultScope: Scope = new Scope();
     preparers?: DataProcessor[];
-    priority:number=0;
+    priority=0;
     filler: [Annotation.Definition, DataProcessor][] = [];
     finalizers?: DataProcessor[];
     scope: Scope = Resolver.defaultScope;
@@ -132,7 +132,6 @@ export namespace Annotation {
     "Boolean": Value.Boolean,
   };
   export type BaseTypeDefinitions = keyof BaseTypeDefinition;
-  type Pair = {[key:string]:string};
   type RetrieveFirstAnnotationKey<Str> = Str extends string ?Str extends `${infer A};${string}`?A:Str:never;
   type AnnotationsRetriever<AnnoStr extends string> = string extends AnnoStr
   ?AnnoStr:
@@ -153,18 +152,18 @@ export namespace Annotation {
     }
     prepare(preparer: Task.DataProcessorFn<Context, Payload>) {
       this._resolver.preparers ||= [];
-      let processor = new DataProcessor(this._resolver);
+      const processor = new DataProcessor(this._resolver);
       processor.process = preparer;
       this._resolver.preparers.push(processor);
       return this;
     }
     fill(key: string, name: string, filler?: Task.DataProcessorFn<Context, Payload>) {
-      let def = this.ctx.services.annotate.registry.get(key)[0]
+      const def = this.ctx.services.annotate.registry.get(key)[0]
       if (def) {
         def.addAlias(name);
         this._resolver.filler ||= [];
-        let processor = new DataProcessor(this._resolver);
-        processor.process = filler ?? ((ctx, payload) => { payload.annotations[key] = "true" });
+        const processor = new DataProcessor(this._resolver);
+        processor.process = filler ?? ((_ctx, payload) => { payload.annotations[key] = "true" });
         this._resolver.filler.push([def, processor]);
 
       }
@@ -180,14 +179,14 @@ export namespace Annotation {
     define<Key extends string,Name extends string,Val extends string | Annotation.Definition>(key:Key, name: Name, valueTypes: Val,
       filler?: Task.DataProcessorFn<Context, Payload<Key,Val extends string?AnnotationsRetriever<Val>:string>>, factory?: DefaultMatcherFactory<DefaultMatcherProto, DefaultMatcherProto.Config>) {
       let def;
-      let service = this._service;
+      const service = this._service;
       if ((def = this.ctx.annotations.get(key)[0]) == undefined) {
         def = new Annotation.Definition(key, name);
       }
       def.addAlias(name);
       if (service.AnnotationDependents[def.key]) {
         if (factory && service.AnnotationDependents[def.key].factory.config.priority < factory.config.priority) {
-          let pre = service.AnnotationDependents[def.key].factory;
+          const pre = service.AnnotationDependents[def.key].factory;
           service.AnnotationDependents[def.key].factory = factory;
           pre.traverse(item => factory.gen(item.config));
         }
@@ -201,10 +200,10 @@ export namespace Annotation {
       if (valueTypes instanceof Annotation.Definition) {
         def.value(valueTypes);
       } else {
-        let dataProcessor: Task.DataProcessor<Context, Payload> = {
-          process: (ctx, payload) => {
-            let annotation = this.ctx.services.annotate.registry.get(key)[0];
-            let vals: Annotation.Definition[] = [];
+        const dataProcessor: Task.DataProcessor<Context, Payload> = {
+          process: () => {
+            const annotation = this.ctx.services.annotate.registry.get(key)[0];
+            const vals: Annotation.Definition[] = [];
             let val: Annotation.Definition;
             valueTypes.split(";").forEach(valuekey => {
               if (undefined != (val = this.ctx.services.annotate.registry.get(valuekey)[0])) {
@@ -222,25 +221,25 @@ export namespace Annotation {
       this._curdef = def;
       this._defs.push(def);
       this._resolver.filler ||= [];
-      let processor = new DataProcessor(this._resolver);
+      const processor = new DataProcessor(this._resolver);
       processor.key = def.key;
       processor.name = def.key
-      processor.process = filler ?? ((ctx, payload) => { payload.annotations[key] = "true" });
+      processor.process = filler ?? ((_ctx, payload) => { payload.annotations[key] = "true" });
       this._resolver.filler.push([def, processor]);
       return this;
     }
     finalize(finalizer: Task.DataProcessorFn<Context, Payload>) {
       this._resolver.finalizers ||= [];
-      let processor = new DataProcessor(this._resolver);
+      const processor = new DataProcessor(this._resolver);
       processor.process = finalizer;
       this._resolver.finalizers.push(processor);
       return this;
     }
     matcher(factory: DefaultMatcherFactory<DefaultMatcherProto, DefaultMatcherProto.Config>) {
       if (this._curdef) {
-        let def = this._curdef;
-        let service = this._service;
-        let pre = service.AnnotationDependents[def.key].factory;
+        const def = this._curdef;
+        const service = this._service;
+        const pre = service.AnnotationDependents[def.key].factory;
         service.AnnotationDependents[def.key].factory = factory;
         pre.traverse(item => factory.gen((item as DefaultMatcherProto).config));
       }
@@ -249,7 +248,7 @@ export namespace Annotation {
     }
     register() {
       this._resolver.scope = this.ctx.scope.clone();
-      let service = this._service;
+      const service = this._service;
       service.mount(this._resolver);
       this._defs.forEach(def => {
         service.registry.register(def);

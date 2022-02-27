@@ -7,12 +7,12 @@ import { PathMatcherFactory } from "../matcher";
 
 export class ResourceOriginFillerPlugin {
   constructor(ctx: Context) {
-    let wild = ctx.on("*");//[^:]+:\/\/[^\/]+
+    const wild = ctx.on("*");//[^:]+:\/\/[^\/]+
     const protocol = /^(?<protocol>[^:]+):\/\/(?<domain>[^\/]+)(?<path>\/.+)/;
-    let builder = wild.build().define("resource.origin", "来源", Annotation.BaseTypeDefinition.RawText, (ctx, payload) => {
+    const builder = wild.build().define("resource.origin", "来源", Annotation.BaseTypeDefinition.RawText, (ctx, payload) => {
       let res;
       if ((res = protocol.exec(payload.origin)) != null) {
-        let node = res[2].split(".");
+        const node = res[2].split(".");
         if (node.length == 2)
           node.reverse().push("www");
         payload.set("resource.origin",`${res[1]}/${node.join("/")}${res[3]}`);

@@ -4,14 +4,13 @@ import { Payload } from "../payload";
 import { Service } from "../service";
 
 namespace App {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
   export interface Config {
 
   }
 }
 
 
-export interface App {
-}
 
 
 
@@ -31,6 +30,7 @@ export class App<CustomService extends string = never> extends Context {
     Promise.resolve(this.initalize0()).then(this.start0.bind(this));
   }
   service<T extends ExtendService<CustomService>>(name:T,ctor: { new(ctx: Context): Service }) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     Context.ServiceCtors[name]=ctor;
   }
@@ -44,15 +44,15 @@ export class App<CustomService extends string = never> extends Context {
     this.consume0(data);
   }
   private async consume0(payload: Payload) {
-    let ctx = this.clone();
+    const ctx = this.clone();
     let res = 0;
-    let next: Next = (data) => {
+    const next: Next = (data) => {
       if (typeof data === "number") {
         res = data;
       }
       return 0;
     }
-    let param = { ctx, payload, next };
+    const param = { ctx, payload, next };
     let p = Promise.resolve(param);
     await AsyncForEach(Context.middleware, (middleware) => {
       p = p.then(async ({ ctx, payload, next }) => {

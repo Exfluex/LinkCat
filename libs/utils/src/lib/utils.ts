@@ -10,7 +10,7 @@ export interface Queue<I>{
 
 
 export class DefaultQueue<I> implements Queue<I>{
-  private nums:number=0;
+  private nums=0;
   private queue:Array<I>;
   constructor(){
     this.queue = [];
@@ -34,6 +34,7 @@ export async function AsyncForEach<T>(array:Array<T>, callback:(item:T,index:num
     await callback(array[index], index, array);
   }
 }
+
 
 
 export type Constructor<T,A extends any[]=any[]> = {new(...args:A):T};

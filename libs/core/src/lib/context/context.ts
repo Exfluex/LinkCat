@@ -2,8 +2,8 @@ import { Constructor, DefaultNumberRegistry, Scope } from "@linkcat/utils";
 import { Annotation } from "../annotation/annotation";
 import { Languages } from "../localize/language";
 import { Payload } from "../payload/payload";
-import { Plugin, PluginType } from "../plugin/plugin";
-import { ExpressEndPoint, NotifyService, RenderService, Service } from "../service/";
+import { PluginType } from "../plugin/plugin";
+import { ExpressEndPoint, Service } from "../service/";
 import { AnnotateService } from "../service/services/annotate_service";
 import { EndPointService } from "../service/services/endpoint_service";
 import { FakeNotifyService } from "../service/services/notify/fake_notify_service";
@@ -28,8 +28,8 @@ interface ScopeParse{
 export class DefaultScopeParser implements ScopeParse{
   regex = /(?:([^=]+?)=([^;]+));{0,1}/g;
   parse(ctx: Context, selection: string): Context {
-    let ret: { [key: string]: string } = {};
-    let scope = new Scope();
+    const ret: { [key: string]: string } = {};
+    const scope = new Scope();
     if(selection == "*"){
       scope.count = 0;
     }
@@ -43,7 +43,7 @@ export class DefaultScopeParser implements ScopeParse{
       }
     }
 
-    let nctx = ctx.clone();
+    const nctx = ctx.clone();
 
     scope.pairs =ret;
     nctx.scope = scope;
@@ -85,23 +85,24 @@ export class Context{
   static plugins:DefaultNumberRegistry<{id:number,name:string,gen:PluginType}> = new DefaultNumberRegistry();
   static scopeParser:ScopeParse=new DefaultScopeParser();
   env:any=null;
-  private _language:string="zh-cn";
+  private _language="zh-cn";
   annotations:AnnotationDefinitionRegistry=new AnnotationDefinitionRegistry();
   scope:Scope=new Scope();
-  constraints:number = 0;
+  constraints = 0;
   plugin(plugin:PluginType){
-    let id = Context.plugins.generateId();
-    let p ={id,name:plugin.name,gen:plugin};
+    const id = Context.plugins.generateId();
+    const p ={id,name:plugin.name,gen:plugin};
     Context.plugins.register(p);
     this.env = p;
     this.env=null;
   }
   constructor(){
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     this.services = Context.services as Context.Services;
   }
   clone(){
-    let ctx = new Context();
+    const ctx = new Context();
     ctx.annotations = this.annotations;
     ctx.services = this.services;
     ctx.variables = this.variables;
@@ -113,7 +114,7 @@ export class Context{
       Context.middleware.push(middleware as AsyncMiddleware);
     }
     else{
-      let asyncMiddleware:AsyncMiddleware=(ctx,payload,next) => {
+      const asyncMiddleware:AsyncMiddleware=(ctx,payload,next) => {
         return new Promise((resolve)=>resolve(middleware(ctx,payload,next)));
       }
       Context.middleware.push(asyncMiddleware);
@@ -126,7 +127,7 @@ export class Context{
     return new Annotation.Builder(this);
   }
   onPage(scope:Context.ScopeString|Scope):Context{
-    let ctx = this.on(scope).on("$page=true");
+    const ctx = this.on(scope).on("$page=true");
     return ctx;
   }
   on(scope:Context.ScopeString|Scope):Context{
@@ -160,7 +161,7 @@ export namespace Context{
     endpoint:EndPointService;
     annotate:AnnotateService;
   }
-  export let services:{[name:string]:Service} = {
+  export const services:{[name:string]:Service} = {
   }
   export type RequiredService="endpoint"|"annotate"|"notify"|"render"|"page";
   export const ServiceCtors:{[key:string]:Constructor<Service,[Context]>}={

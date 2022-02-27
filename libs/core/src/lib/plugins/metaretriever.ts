@@ -11,10 +11,10 @@ export namespace MetaRetrieverPlugin {
 }
 
 export class MetaRetrieverPlugin {
-  constructor(ctx: Context, config: Plugin.Config) {
+  constructor(ctx: Context, _config: Plugin.Config) {
     //TODO localize
 
-    let scoped = ctx.onPage("resource.origin=:protocol(http|https)/:rest(.*)").language("zh-cn").build().prepare((ctx, payload) => {
+    const scoped = ctx.onPage("resource.origin=:protocol(http|https)/:rest(.*)").language("zh-cn").build().prepare((_ctx, _payload) => {
       console.log("multi-children resolver");
     });
     scoped.define("linkcat.buildin.title", "标题", Annotation.BaseTypeDefinition.RawText, async (ctx, payload) => {
@@ -29,7 +29,7 @@ export class MetaRetrieverPlugin {
     scoped.define("linkcat.buildin.description", "描述", Annotation.BaseTypeDefinition.RawText, (ctx, payload) => {
       payload.set("linkcat.buildin.description","fakeData");
     });
-    const protocolRegex = /([^\/]+):(.+)/;
+    const protocolRegex = /([^/]+):(.+)/;
     const protocol:Pair={
       "http":"linkcat.buildin.protocol.http",
       "https":"linkcat.buildin.protocol.https",
@@ -37,7 +37,8 @@ export class MetaRetrieverPlugin {
       "ftp":"linkcat.buildin.protocol.ftp",
     }
     scoped.define("linkcat.buildin.protocol", "协议", "linkcat.buildin.protocol.ftp;linkcat.buildin.protocol.http;linkcat.buildin.protocol.https;linkcat.buildin.protocol.file;linkcat.buildin.protocol.unknown", (ctx, payload) => {
-      let res = protocolRegex.exec(payload.origin);
+      const res = protocolRegex.exec(payload.origin);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       payload.set("linkcat.buildin.protocol",(res)?(protocol[res[1]] as any)??"linkcat.buildin.protocol.unknown":"linkcat.buildin.protocol.unknown");
     });
     scoped.define("linkcat.buildin.protocol.ftp", "文件传输协议", Annotation.BaseTypeDefinition.Boolean);
