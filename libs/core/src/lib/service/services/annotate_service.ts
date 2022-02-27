@@ -20,7 +20,7 @@ export interface AnnotateService {
 
 
 export class AnnotateService extends Service implements TaskLoop<Context, Payload>{
-  active: boolean = false;
+  active = false;
   async start(): Promise<void> {
     this.active = true;
     this.pendByType("Add Plugins",{});
@@ -53,12 +53,12 @@ export class AnnotateService extends Service implements TaskLoop<Context, Payloa
     ctx.plugin(ResourceOriginFillerPlugin);
     ctx.plugin(MetaRetrieverPlugin);
   }
-  id: string = "AnnotateService";
+  id = "AnnotateService";
   async loopUntilEmpty(ctx: Context, payload: Payload, config?: any): Promise<Payload> {
     return await this.taskLoop.loopUntilEmpty(ctx, payload);
   }
   pendByType(taskType: string, data: any) {
-    let taskFac = AnnotateService.TaskTypes[taskType];
+    const taskFac = AnnotateService.TaskTypes[taskType];
     if (taskFac != undefined) {
       this.pend(taskFac(data));
     }
@@ -115,7 +115,7 @@ export namespace AnnotateService {
 
   export type Env = { ctx: Context, payload: Payload };
   //TODO retrieve these as TemplateRegistry
-  export let TaskTypes: {
+  export const TaskTypes: {
     [type: string]: (data: any) => Task<Context, Payload>;
   } = {
     "Add Plugins":(data: Env) => {
@@ -172,8 +172,8 @@ export namespace AnnotateService {
       return new DefaultTask("Fill Single Annotation", {
         process: async (ctx, payload) => {
           if (fillers.length > 0) {
-            let filler = fillers[0];
-            let resolver = filler.resolver;
+            const filler = fillers[0];
+            const resolver = filler.resolver;
             ctx.env = resolver;
             payload.current =  payload.plugin[resolver.id];
             if (resolver.preparers)

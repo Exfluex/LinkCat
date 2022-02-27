@@ -24,7 +24,10 @@
     {
       "files": ["*.ts", "*.tsx"],
       "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "rules": {
+        "@typescript-eslint/no-namespace":"off",
+        "@typescript-eslint/no-explicit-any":"off"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

@@ -1,6 +1,6 @@
 
 export class Task<Context,Payload>{
-  constructor(public name:string,private dataProcessor:Task.DataProcessor<Context,Payload>,priority:number=0){
+  constructor(public name:string,private dataProcessor:Task.DataProcessor<Context,Payload>,priority=0){
 
   }
   async execute(ctx:Context,payload:Payload){

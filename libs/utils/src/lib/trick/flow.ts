@@ -1,7 +1,7 @@
 
 
 export class Flow<T>{
-  position:number=-1;
+  position=-1;
   next:Flow<T>|null=null;
   pre:Flow<T>=this;
   constructor(public name:string,public item?:T){
@@ -17,10 +17,11 @@ export class FlowManager<N extends string,T=never>{
     this.tail = this.head;
   }
   then<RN extends N>(name:RN,item?:T):FlowManager<Exclude<N,RN>>{
-    let n = new Flow(name,item);
+    const n = new Flow(name,item);
     n.pre = this.tail;
     n.position = this.tail.position+1;
     this.tail = this.tail.next = n;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     return this;
   }

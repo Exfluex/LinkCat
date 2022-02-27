@@ -6,8 +6,7 @@ export type MatcherEnv = {ctx:Context,payload:Payload,data?:any};
 export type MatcherCallback = (matcher:DefaultMatcherProto,env: MatcherEnv)=>any;
 export interface DefaultMatcherRegistry<M extends DefaultMatcherProto<C>,C extends DefaultMatcherProto.Config> extends Matcher.Factory<string,never,C,M>, MatcherRegistry<string,MatcherEnv,M>{
 }
-export interface DefaultMatcherProto<C extends DefaultMatcherProto.Config = DefaultMatcherProto.Config> extends PriorityMatcher<string,MatcherEnv,C>{
-}
+export type DefaultMatcherProto<C extends DefaultMatcherProto.Config = DefaultMatcherProto.Config> = PriorityMatcher<string,MatcherEnv,C>
 export namespace DefaultMatcherProto{
   export interface Config extends PriorityMatcher.Config{
     resolver:number;

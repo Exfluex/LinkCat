@@ -13,16 +13,15 @@ export const defaultCallback:MatcherCallback=(matcher,env)=>{
   else{
     payload.plugin[config.resolver][Payload.Count]+=1;
   }
-  let pluginScopeData = payload.plugin[config.resolver];
+  const pluginScopeData = payload.plugin[config.resolver];
   pluginScopeData[matcher.config.name]=data??null;
-  let service = ctx.services.annotate;
-  let resolver = service.resolverRegistry.find(matcher.config.resolver)[0] as Annotation.Resolver;
+  const service = ctx.services.annotate;
+  const resolver = service.resolverRegistry.find(matcher.config.resolver)[0] as Annotation.Resolver;
   if(resolver && pluginScopeData[Payload.Count] == (resolver.scope.count??-1)){
     service.pendByType("Add Resolver Execution",{resolver:resolver});
   }
 };
-export interface ExactMatcherConfig extends DefaultMatcherProto.Config{
-}
+export type ExactMatcherConfig = DefaultMatcherProto.Config
 export class ExactMatcher implements DefaultMatcherProto<ExactMatcherConfig>{
   match(target: string, data?: MatcherEnv) {
     return this.config.goal == target;
@@ -35,10 +34,10 @@ export class ExactMatcherFactory implements DefaultMatcherFactory<ExactMatcher,E
   match(target: string, env: MatcherEnv):number {
     let num = 0;
     this.matchers.forEach(matcher =>{
-      let res = matcher.match(target);
+      const res = matcher.match(target);
       if(res != false){
         num++;
-        let cb = matcher.config.callback??this._callback;
+        const cb = matcher.config.callback??this._callback;
         cb(matcher,env);
       }
     })
@@ -48,12 +47,12 @@ export class ExactMatcherFactory implements DefaultMatcherFactory<ExactMatcher,E
   matchers:ExactMatcher[]=[];
   constructor(public id:number,public config:DefaultMatcherProto.Config){
   }
-  private maxId:number=0;
+  private maxId=0;
   private  generateId():number{
     return this.maxId++;
   }
   gen(config: ExactMatcherConfig): ExactMatcher {
-    let matcher = new ExactMatcher(this.generateId(),config);
+    const matcher = new ExactMatcher(this.generateId(),config);
     this.register(matcher);
     return matcher;
   }
@@ -81,7 +80,7 @@ type PickFunction<T,M extends string> = M extends keyof T ? (T[M] extends Functi
 export class PathMatcher implements DefaultMatcherProto<PathMatcherConfig>{
   matchFn:MatchFunction;
   match(target:string){
-    let res = this.matchFn(target);
+    const res = this.matchFn(target);
     if(res == false)
       return null;
     return res.params;
@@ -98,11 +97,11 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
   constructor(public id:number,public config:DefaultMatcherProto.Config){
   }
   gen(config: PathMatcherConfig): PathMatcher {
-    let matcher = new PathMatcher(this.generateId(),config);
+    const matcher = new PathMatcher(this.generateId(),config);
     this.register(matcher);
     return matcher;
   }
-  private maxId:number=0;
+  private maxId=0;
   private  generateId():number{
     return this.maxId++;
   }
@@ -110,15 +109,15 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
   async match(target: string, env:MatcherEnv): Promise<number> {
     let num  =0;
     this.prior.forEach(async matcher=>{
-      let res = matcher.match(target);
+      const res = matcher.match(target);
       if(res != null){
         num++;
         env.data = res;
-        let cb = matcher.config.callback??this._callback;
+        const cb = matcher.config.callback??this._callback;
         cb(matcher,env);
       }
     });
-    let res = PathMatcherFactory.pathMatcher.exec(target);
+    const res = PathMatcherFactory.pathMatcher.exec(target);
     if(res == null){
       //TODO Throw Warnning
       return -1;
@@ -132,16 +131,16 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
     if(!branch){
       return num;
     }
-    let leaf = branch[res[3]] as PathMatcherFactory.QuickSearchLeaf;
+    const leaf = branch[res[3]] as PathMatcherFactory.QuickSearchLeaf;
     if(!leaf){
       return num;
     }
     leaf.matchers.forEach(matcher =>{
-      let res = matcher.match(target);
+      const res = matcher.match(target);
       if(res != null){
         num++;
         env.data = res;
-        let cb = matcher.config.callback??this._callback;
+        const cb = matcher.config.callback??this._callback;
         cb(matcher,env);
       }
     });
@@ -152,7 +151,7 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
       this.prior.push(matcher);
       return this;
     }
-    let res = PathMatcherFactory.pathMatcher.exec(matcher.config.goal);
+    const res = PathMatcherFactory.pathMatcher.exec(matcher.config.goal);
     if(res == null){
       //TODO Throw Warnning
       this.prior.push(matcher);
@@ -179,20 +178,18 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
 
 
 export namespace PathMatcherFactory{
-  export interface Config extends DefaultMatcherProto.Config{
-
-  }
+  export type Config = DefaultMatcherProto.Config
   export const leaf = Symbol("leaf");
   export const index = Symbol("index");
-  export let pathMatcher = /\/([^\/]+)\/([^\/]+)\/([^\/]{1})/;
+  export const pathMatcher = /\/([^\/]+)\/([^\/]+)\/([^\/]{1})/;
   export class Node{
-    [leaf]:boolean=false;
+    [leaf]=false;
   }
   export class QuickSearchBranch extends Node{
     [key:string]:Node;
   }
   export class QuickSearchLeaf extends Node{
-    [leaf]:boolean = true;
+    [leaf] = true;
     constructor(public matchers:PathMatcher[]=[]){
       super();
     }

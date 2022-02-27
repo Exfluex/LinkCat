@@ -1,0 +1,28 @@
+{
+  "root": "apps/blockcat-e2e",
+  "sourceRoot": "apps/blockcat-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/blockcat-e2e/cypress.json",
+        "devServerTarget": "blockcat:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "blockcat:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/blockcat-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["blockcat"]
+}

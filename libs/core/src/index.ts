@@ -7,3 +7,4 @@ export * from './lib/payload/payload'
 export * from './lib/plugin/index'
 export * from './lib/service';
 export * from './lib/task'
+export * from './lib/render'
