@@ -1,13 +1,13 @@
+import { FullView } from "../components/tool_sections/window";
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-import NxWelcome from './nx-welcome';
 
 export function App() {
   return (
-    <>
-      <NxWelcome title="blockcat" />
-      <div />
-    </>
+      // <SidebarWithHeader>
+      //   <Workspace/>
+      // </SidebarWithHeader>
+      <FullView></FullView>
   );
 }
 
