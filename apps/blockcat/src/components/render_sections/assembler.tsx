@@ -7,9 +7,11 @@ import React, { ReactNode } from 'react';
 import { Card } from './card';
 import { ComponentWrapper } from './component_wrapper';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { FactoryRingTestEnv } from '../tool_sections/composite/factory_ring/test_env';
 export interface AssemblerProps {
   blocks?: CardRenderConfig;
 }
+
 export function Assembler(props: AssemblerProps) {
   return (
     <Card>
@@ -17,7 +19,7 @@ export function Assembler(props: AssemblerProps) {
         AssembleFn(props.blocks.comps, 0)
       ) : (
         <Center fontWeight={'bold'}>
-          {/* <FactoryRing> */}
+          <FactoryRingTestEnv >
           <IconButton
             mb={0}
             rounded={"full"}
@@ -28,7 +30,7 @@ export function Assembler(props: AssemblerProps) {
             pointerEvents={'all'}
             icon={<AiOutlinePlus />}
           />
-          {/* </FactoryRing> */}
+          </FactoryRingTestEnv>
         </Center>
       )}
     </Card>
