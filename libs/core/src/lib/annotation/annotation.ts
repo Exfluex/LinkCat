@@ -103,10 +103,10 @@ export namespace Annotation {
   export type Value = string[];
   export namespace Value {
     export const RawText = new Annotation.Definition("RawText", "RawText");
-    export const Url = new Annotation.Definition("RawText", "RawText");
-    export const JSON = new Annotation.Definition("RawText", "RawText");
-    export const MarkDown = new Annotation.Definition("RawText", "RawText");
-    export const Number = new Annotation.Definition("RawText", "RawText");
+    export const Url = new Annotation.Definition("Url", "Url");
+    export const JSON = new Annotation.Definition("JSON", "JSON");
+    export const MarkDown = new Annotation.Definition("MarkDown", "MarkDown");
+    export const Number = new Annotation.Definition("Number", "Number");
     export const Boolean = new Annotation.Definition("Boolean", "Boolean");
     RawText.basic = true;
     Url.basic = true;
