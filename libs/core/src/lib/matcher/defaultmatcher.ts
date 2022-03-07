@@ -76,7 +76,7 @@ export interface PathMatcherConfig extends DefaultMatcherProto.Config{
   withParam?:boolean;
 }
 
-type PickFunction<T,M extends string> = M extends keyof T ? (T[M] extends Function ? T[M]: never):never;
+// type PickFunction<T,M extends string> = M extends keyof T ? (T[M] extends Function ? T[M]: never):never;
 export class PathMatcher implements DefaultMatcherProto<PathMatcherConfig>{
   matchFn:MatchFunction;
   match(target:string){
@@ -92,50 +92,50 @@ export class PathMatcher implements DefaultMatcherProto<PathMatcherConfig>{
 
 
 export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,PathMatcherConfig>{
-  root:PathMatcherFactory.QuickSearchBranch=new PathMatcherFactory.QuickSearchBranch();
-  prior:PathMatcher[]=[];
+  root:PathMatcherFactory.QuickSearchBranch=new PathMatcherFactory.QuickSearchBranch();//快查树根节点
+  prior:PathMatcher[]=[];//高优先级或不是path-to-regex类型的的PathMatcher
   constructor(public id:number,public config:DefaultMatcherProto.Config){
   }
-  gen(config: PathMatcherConfig): PathMatcher {
+  gen(config: PathMatcherConfig): PathMatcher {//生成PathMatcher
     const matcher = new PathMatcher(this.generateId(),config);
-    this.register(matcher);
+    this.register(matcher);//注册到树上
     return matcher;
   }
   private maxId=0;
   private  generateId():number{
     return this.maxId++;
   }
-  _callback:MatcherCallback=defaultCallback;
-  async match(target: string, env:MatcherEnv): Promise<number> {
+  _callback:MatcherCallback=defaultCallback;//细节看之前RenderModule的文章
+  async match(target: string, env:MatcherEnv): Promise<number> {//匹配入口
     let num  =0;
-    this.prior.forEach(async matcher=>{
+    this.prior.forEach(async matcher=>{//先把高优先级的matcher执行一遍
       const res = matcher.match(target);
       if(res != null){
         num++;
         env.data = res;
         const cb = matcher.config.callback??this._callback;
-        cb(matcher,env);
+        cb(matcher,env);//回调函数
       }
     });
-    const res = PathMatcherFactory.pathMatcher.exec(target);
+    const res = PathMatcherFactory.pathMatcher.exec(target);//分段path
     if(res == null){
       //TODO Throw Warnning
       return -1;
     };
     let branch:PathMatcherFactory.QuickSearchBranch;
-    branch =this.root[res[1]] as PathMatcherFactory.QuickSearchBranch;
+    branch =this.root[res[1]] as PathMatcherFactory.QuickSearchBranch;//拿到顶级域名 com\org\top节点
     if(!branch){
       return num;
     }
-    branch = branch[res[2]] as PathMatcherFactory.QuickSearchBranch;
+    branch = branch[res[2]] as PathMatcherFactory.QuickSearchBranch;//拿到主域名 github/google/oyxf节点
     if(!branch){
       return num;
     }
-    const leaf = branch[res[3]] as PathMatcherFactory.QuickSearchLeaf;
+    const leaf = branch[res[3]] as PathMatcherFactory.QuickSearchLeaf;//拿到次级域名首字母索引节点
     if(!leaf){
       return num;
     }
-    leaf.matchers.forEach(matcher =>{
+    leaf.matchers.forEach(matcher =>{//执行挂载的Matcher
       const res = matcher.match(target);
       if(res != null){
         num++;
@@ -148,31 +148,31 @@ export class PathMatcherFactory implements DefaultMatcherFactory<PathMatcher,Pat
   }
   register(matcher: PathMatcher): this {
     if(matcher.config.priority > 0){
-      this.prior.push(matcher);
+      this.prior.push(matcher);//如果优先级比较高，就push到prior
       return this;
     }
     const res = PathMatcherFactory.pathMatcher.exec(matcher.config.goal);
     if(res == null){
       //TODO Throw Warnning
-      this.prior.push(matcher);
+      this.prior.push(matcher);//如果无法分段，就push到prior，这里还有bug需要Fix
       return this
     };
     let branch:PathMatcherFactory.QuickSearchBranch;
     let leaf:PathMatcherFactory.QuickSearchLeaf;
-    this.root[res[1]] = branch = (this.root[res[1]]??new PathMatcherFactory.QuickSearchBranch()) as PathMatcherFactory.QuickSearchBranch;
-    branch[res[2]] = branch  =  (branch[res[2]]??new PathMatcherFactory.QuickSearchBranch()) as PathMatcherFactory.QuickSearchBranch;
-    branch[res[3]] = leaf = (branch[res[3]]??new PathMatcherFactory.QuickSearchLeaf()) as PathMatcherFactory.QuickSearchLeaf;
-    leaf.matchers.push(matcher);
+    this.root[res[1]] = branch = (this.root[res[1]]??new PathMatcherFactory.QuickSearchBranch()) as PathMatcherFactory.QuickSearchBranch;//构建顶级域名节点
+    branch[res[2]] = branch  =  (branch[res[2]]??new PathMatcherFactory.QuickSearchBranch()) as PathMatcherFactory.QuickSearchBranch;//构建主域名节点
+    branch[res[3]] = leaf = (branch[res[3]]??new PathMatcherFactory.QuickSearchLeaf()) as PathMatcherFactory.QuickSearchLeaf;//构建次级域名索引节点
+    leaf.matchers.push(matcher);//把Matcher存入叶子节点
     return this;
   }
-  unregister(id: number): this {
+  unregister(id: number): this {//nope
     return this;
   }
   traverse(traverse: Registry.traverseFn<PathMatcher>): this {
-    return this;
+    return this;//nope
   }
   find(id: number): Registry.Item<number>[] {
-    return [];
+    return [];//nope
   }
 }
 
