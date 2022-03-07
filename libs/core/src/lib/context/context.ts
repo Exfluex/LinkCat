@@ -175,7 +175,13 @@ export namespace Context{
     "page":PuppeteerService,
   }
   export type BuildinServiceType = "endpoint"|"annotate"|"notify"|"render";
-
-  export type ScopeString = string;
+  export type LowercaseCharDictionary="a"|"b"|"c"|"d"|"e"|"f"|"g"|"h"|"i"|"j"|"k"|"l"|"m"|"n"|"o"|"p"|"q"|"r"|"s"|"t"|"u"|"v"|"w"|"x"|"y"|"z";
+  export type AnnotationKeyRec<S extends string> = S extends `${LowercaseCharDictionary|number|"."}${infer Rest}`?  AnnotationKeyRec<Rest>:S extends LowercaseCharDictionary|number|"."|""?"":never;
+  export type AnnotationKey<S> = S extends `.${string}`|`${string}.` ? never:AnnotationKeyRec<S> extends never?never:S;
+  export type AnnotationString<S> = S extends `${infer K}=${infer V}`?AnnotationKey<K> extends never?never:V extends `${string};${string}`?never:S:never;
+  export type AnnotationStrings<S> = S extends `${infer A};${infer Rest}`?AnnotationString<A> extends never?never:AnnotationStrings<Rest>:AnnotationString<S> extends never?never:S;
+  export type ScopeString<T> = AnnotationStrings<T> extends never?never:T;
   export type Scope = Record<string,string>;
+
+  let a:ScopeString<"a.bc=asdaCfadas;faAs.cbw=asdfgsf">
 }
