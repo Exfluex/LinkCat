@@ -10,9 +10,13 @@ export class Annotation {
   _value: Annotation.Value = ['true'];
   constructor(public key: string = "noop", public name: string) {
   }
-  set value(val: string) {
+  set value(val: string[] | string) {
     //TODO add prior check
-    this._value = [val];
+    if (typeof val === "object") {
+      this._value.push(...val)
+    } else {
+      this._value.push(val);
+    }
   }
   get value() {
     return this.toString();
@@ -21,7 +25,7 @@ export class Annotation {
     return this._value.join(',');
   }
   toString(): string {
-    return this.name + "=[" + this.valueToString() + "]";
+    return `${this.name}=[${this.valueToString()}]`;
   }
 }
 
@@ -38,8 +42,8 @@ export namespace Annotation {
     dup = 0;
     _value: Definition[] = [];
     description = "";
-    basic=false;
-    isValue=false;
+    basic = false;
+    isValue = false;
     constructor(key: string, name: string) {
       this.key = key;
       this.addAlias(name);
@@ -86,7 +90,7 @@ export namespace Annotation {
     type: Resolver.Type = Resolver.Type.Filler;
     static defaultScope: Scope = new Scope();
     preparers?: DataProcessor[];
-    priority=0;
+    priority = 0;
     filler: [Annotation.Definition, DataProcessor][] = [];
     finalizers?: DataProcessor[];
     scope: Scope = Resolver.defaultScope;
@@ -94,7 +98,7 @@ export namespace Annotation {
 
     }
   }
-  export namespace Resolver {
+  export namespace Resolver {()
     export enum Type {
       Filler,
       Decorator
@@ -132,14 +136,14 @@ export namespace Annotation {
     "Boolean": Value.Boolean,
   };
   export type BaseTypeDefinitions = keyof BaseTypeDefinition;
-  type RetrieveFirstAnnotationKey<Str> = Str extends string ?Str extends `${infer A};${string}`?A:Str:never;
+  type RetrieveFirstAnnotationKey<Str> = Str extends string ? Str extends `${infer A};${string}` ? A : Str : never;
   type AnnotationsRetriever<AnnoStr extends string> = string extends AnnoStr
-  ?AnnoStr:
-      AnnoStr extends `${string};${infer Rest}`?
-          RetrieveFirstAnnotationKey<AnnoStr> | (
-            AnnotationsRetriever<Rest>
-          )
-      :AnnoStr;
+    ? AnnoStr :
+    AnnoStr extends `${string};${infer Rest}` ?
+    RetrieveFirstAnnotationKey<AnnoStr> | (
+      AnnotationsRetriever<Rest>
+    )
+    : AnnoStr;
 
   export class Builder {
     private _defs: Annotation.Definition[] = [];
@@ -172,12 +176,12 @@ export namespace Annotation {
       }
       return this;
     }
-    priority(prior:number){
+    priority(prior: number) {
       this._resolver.priority = prior;
     }
 
-    define<Key extends string,Name extends string,Val extends string | Annotation.Definition>(key:Key, name: Name, valueTypes: Val,
-      filler?: Task.DataProcessorFn<Context, Payload<Key,Val extends string?AnnotationsRetriever<Val>:string>>, factory?: DefaultMatcherFactory<DefaultMatcherProto, DefaultMatcherProto.Config>) {
+    define<Key extends string, Name extends string, Val extends string | Annotation.Definition>(key: Key, name: Name, valueTypes: Val,
+      filler?: Task.DataProcessorFn<Context, Payload<Key, Val extends string ? AnnotationsRetriever<Val> : string>>, factory?: DefaultMatcherFactory<DefaultMatcherProto, DefaultMatcherProto.Config>) {
       let def;
       const service = this._service;
       if ((def = this.ctx.annotations.get(key)[0]) == undefined) {
@@ -207,7 +211,7 @@ export namespace Annotation {
             let val: Annotation.Definition;
             valueTypes.split(";").forEach(valuekey => {
               if (undefined != (val = this.ctx.services.annotate.registry.get(valuekey)[0])) {
-                val.isValue=true;
+                val.isValue = true;
                 vals.push(val);
               }
             });
