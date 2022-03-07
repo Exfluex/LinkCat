@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { createContext, ReactNode, useContext, useRef, useState } from 'react';
+import { Core, Mantle, Satellite } from './data';
 import { FactoryRing } from './factory_ring';
-import { Mantle } from './mantle_manager';
-import { Satellite } from './satellite_btn';
+import { FactoryRingEnvironment, FactoryRingPhase } from './factory_ring_env';
 
 interface UncontrolledFactoryRingProps<T> {
   mantles: Mantle<T>[];
@@ -17,15 +17,47 @@ interface UncontrolledFactoryRingProps<T> {
   children: ReactNode;
 }
 
+export const FactoryRingEnvrionmentContext =
+  createContext<FactoryRingEnvironment>(null as any);
+export const useRingEnvironment = () =>
+  useContext(FactoryRingEnvrionmentContext);
 
 
 export function UncontrolledFactoryRing<T = never>({
   children,
+  mantles,
+  satellites,
   ...props
 }: UncontrolledFactoryRingProps<T>) {
+  const hooksRef = useRef({});
+
+  const [_satellites, setSatellites] = useState([]);
+  const [_mantles,setMantles] = useState([]);
+  const [_searchString,setSearchString]  =useState("");
+  const [_phase,setPhase] = useState<FactoryRingPhase>("DidCollapse");
+  const [_hovering,setHovering ] =useState<Core<T>>(null);
+  const envValue:FactoryRingEnvironment = {
+    mantles:_mantles,
+    satellites:_satellites,
+    searchString: _searchString,
+    hovering: _hovering,
+    phase: _phase,
+    setHovering,
+    setSatellites,
+    setMantles,
+    setPhase,
+    setSearchString
+  };
   return (
-    <FactoryRing<T> duration={2} {...props}>
-      {children}
-    </FactoryRing>
+    <FactoryRingEnvrionmentContext.Provider value={envValue}>
+      <FactoryRing<T>
+        duration={2}
+        satellites={satellites}
+        mantles={mantles}
+        {...props}
+      >
+        {children}
+      </FactoryRing>
+    </FactoryRingEnvrionmentContext.Provider>
   );
 }

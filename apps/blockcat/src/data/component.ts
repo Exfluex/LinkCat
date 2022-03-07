@@ -42,7 +42,6 @@ export interface ComponentMeta {
   node: FunctionComponent,
   text:TextType[];
   type: ComponentType,
-  // Actions?: ComponentActions;
   controller: CompActionController;
   defaultProps?: {
     [key: string]: string | number
@@ -413,7 +412,9 @@ const InsertBettwenBsePoint2Effected: CompMiddleware = (ctx, payload, next) => {
   next();
   return { comp: InsertBettwenMacro(ctx, payload) };
 };
+
 export const DefaultInsertMiddlewares = CompMiddlewares.Gen().use(InsertBettwenBsePoint2Effected);
+
 const InsertBettwenMacro = (ctx: Context, payload: Payload) => {
   const action = payload.action;
   BlockLinkTool.fillOuter(payload.comp, payload.target.id);
@@ -491,10 +492,17 @@ const DefaultComponentDeleter: CompMiddleware = (ctx, payload, next) => {
   return { comp: deleted };
 }
 export interface CompActionController {
-  tryGenerateAt(direction: InnerOutDirection, block: CardRenderConfig, target: PositionableBlockProps): { result: CompActionResType, comp: number };
-  tryInsert(comp: PositionableBlockProps, direction: InnerOutDirection, block: CardRenderConfig, target: PositionableBlockProps): { result: CompActionResType, comp: number };
-  tryDelete(block: CardRenderConfig, target: PositionableBlockProps): {message:string;result:CompActionResType} ;
-  tryMove(block: CardRenderConfig, dragged: PositionableBlockProps, ev: SimpleDragEvent): {message:string;result:CompActionResType} ;
+  tryGenerateAt(direction: InnerOutDirection, block: CardRenderConfig,
+    target: PositionableBlockProps):
+  { result: CompActionResType, comp: number };
+  tryInsert(comp: PositionableBlockProps, direction: InnerOutDirection,
+    block: CardRenderConfig, target: PositionableBlockProps):
+  { result: CompActionResType, comp: number };
+  tryDelete(block: CardRenderConfig, target: PositionableBlockProps):
+  {message:string;result:CompActionResType} ;
+  tryMove(block: CardRenderConfig, dragged: PositionableBlockProps,
+    ev: SimpleDragEvent):
+  {message:string;result:CompActionResType} ;
   actions: ComponentActions;
   meta: ComponentMeta;
 }
@@ -569,12 +577,12 @@ export class DefaultCompActionController implements CompActionController {
     return controller;
   }
   tryInsert(comp: PositionableBlockProps, direction: InnerOutDirection, block: CardRenderConfig, target: PositionableBlockProps): { result: CompActionResType, comp: number } {
-    const meta = this.meta;
+    const meta = this.meta;//获取ComponentMeta用检查插入节点的合法性
     //TODO change to handler adapter pattern
-    const shortDirection = InnerOuterMapDirection[direction];
-    let effected;
-    let payload: Payload;
-    if (direction.startsWith("Outer")) {
+    const shortDirection = InnerOuterMapDirection[direction];//将direction中inner和outer前缀通过table-driven的方式去除
+    let effected;//effected节点
+    let payload: Payload;//创造负载对象
+    if (direction.startsWith("Outer")) {//进行操作主体转换，将target转换为target.parent
       effected = block.comps.find(comp => comp.id === target.directions[direction]);
       payload = {
         target: block.comps.find(comp => comp.id === target.parent),
@@ -588,7 +596,7 @@ export class DefaultCompActionController implements CompActionController {
       }
     }
     else {
-      if (target.children.length === 0) {
+      if (target.children.length === 0) {//没有子节点，直接insert in
         payload = {
           target,
           action: {
@@ -600,7 +608,7 @@ export class DefaultCompActionController implements CompActionController {
           comp
         }
       }
-      else {
+      else {//有子节点，构建正确的payload对象
         let basepoint: PositionableBlockProps;
         //Insert in first last
         if (shortDirection === "Up" || shortDirection === "Left") {
@@ -623,19 +631,22 @@ export class DefaultCompActionController implements CompActionController {
         }
       }
     }
-    const ctx: Context = {
+    const ctx: Context = {//上下文对象，这里就是对应的组件meta数据
       meta: meta,
-      factory: ComponentFactory
+      factory: ComponentFactory//所有组件的工厂函数,代码在下面
     }
-    payload.comp.id = payload.comp.id === -1?++payload.block.maxChild:payload.comp.id;
+    payload.comp.id = payload.comp.id === -1?++payload.block.maxChild:payload.comp.id;//code smell，后面要理清一下这里给id的逻辑
     const action = this.actions;
+    //TODO make this a priority chain to do this check automatically.
+    //按照优先级获取这个Insert的操作handler
+    //优先级为作用域越小，优先级越高
     const handler: CompMiddlewares = action[`Insert${payload.action.direction}`] ?? action[shortDirection === "Up" || shortDirection === "Down" ? "InsertVertical" : "InsertHorizontal"] ?? action["GeneralInsertHandler"] ?? DefaultInsertMiddlewares;
-    const res = handler.dispatch(ctx, payload);
-    if (res === undefined) {
-      console.log("WIP");
+    const res = handler.dispatch(ctx, payload);//开始dispatch event
+    if (res === undefined) {//结果判定
+      console.log("WIP");//这里应该用Logger，但是还没有实现LoggerService，所以打印个WIP
       return;
     }
-    return {
+    return {//emmm 没时间写逻辑判定，直接给个成功
       result: "Success",
       comp: payload.comp.id
     };

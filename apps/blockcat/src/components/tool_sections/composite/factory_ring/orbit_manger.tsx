@@ -1,6 +1,8 @@
 import { Box, Show, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Satellite, SatelliteBtn, StatelliteRenderer } from './satellite_btn';
+import { Satellite } from './data';
+import {  SatelliteBtn, StatelliteRenderer } from './satellite_btn';
+
 
 
 export interface OrbitMangerProps<T> {

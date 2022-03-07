@@ -1,6 +1,9 @@
 import { Circle, Tooltip } from '@chakra-ui/react';
-import { ReactNode } from 'react';
+import { Variants } from 'framer-motion';
+import { ReactNode, useEffect, useState } from 'react';
 import { MotionBox, MotionBoxProps } from '../../../motioned';
+import { Satellite } from './data';
+import { useRingEnvironment } from './uncontrolled_factory_ring';
 
 export type StatelliteRenderer<T> = (
   satellite: Satellite<T>,
@@ -8,14 +11,39 @@ export type StatelliteRenderer<T> = (
   env
 ) => ReactNode;
 
-export interface Satellite<T> {
-  name: string;
-  key: string;
-  description: string;
-  item?: T;
-  children?: ReactNode;
-  render?: (satellite: Satellite<T>, env) => ReactNode;
-}
+const satelliteAncherVariants: Variants = {
+  Show: ({
+    angle,
+    posAngle,
+  }: {
+    angle: number;
+    posAngle: number;
+  }) => ({
+    rotate: angle + posAngle,
+  }),
+  Hide: {
+    rotate: 0,
+  },
+};
+
+const satelliteContainerVariants: Variants = {
+  Show: ({
+    angle,
+    radius,
+    posAngle,
+  }: {
+    radius: number;
+    angle: number;
+    posAngle: number;
+  }) => ({
+    x: radius,
+    rotate: -(angle + posAngle),
+  }),
+  Hide: {
+    x: 0,
+    rotate: 0,
+  },
+};
 
 export interface SatelliteBtnProps<T> extends MotionBoxProps {
   angle: number;
@@ -43,23 +71,40 @@ export function SatelliteBtn<T>({
   satellite,
   ...props
 }: SatelliteBtnProps<T>) {
+  const env = useRingEnvironment();
+
+  const [phase, setPhase] = useState('Show');
+  useEffect(() => {
+    if (radius > 0) {
+      setPhase('Show');
+    } else {
+      setPhase('Hide');
+    }
+  }, [radius]);
   return (
-    <MotionBox
+    <MotionBox //Ancher
       pos={'absolute'}
       left={0}
       top={0}
       w={'100%'}
       h={'100%'}
+      custom={{posAngle:posAngel,angle}}
       transformOrigin={'center'}
-      animate={{ rotate: angle + posAngel }}
+      animate={phase}
+      variants={satelliteAncherVariants}
+      onAnimationComplete={(def:string)=>{
+        console.log(`Satellite[${key}]:${def}`);
+      }}
       transition={{ ...transition }}
     >
-      <MotionBox
+      <MotionBox //Container
         left={0}
         w={size}
         h={size}
-        animate={{ x: radius, rotate: -(angle + posAngel) }}
+        variants={satelliteContainerVariants}
+        custom={{posAngle:posAngel,angle,radius}}
         transition={{ ...transition }}
+        animate={phase}
       >
         <MotionBox
           userSelect={'none'}
@@ -73,6 +118,7 @@ export function SatelliteBtn<T>({
         >
           <Tooltip
             defaultIsOpen
+            isDisabled={env.phase !== "DidSpread"}
             label={`${satellite.name}as`}
             placement={
               posAngel < 90 || posAngel > 270 ? 'right-start' : 'left-start'

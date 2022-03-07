@@ -1,6 +1,8 @@
+import { addComponent, useAppDispatch } from 'apps/blockcat/src/store';
 import { ReactNode } from 'react';
-import { Mantle } from './mantle_manager';
-import { Satellite } from './satellite_btn';
+import { Mantle, Satellite } from './data';
+
+
 
 import { UncontrolledFactoryRing } from './uncontrolled_factory_ring';
 
@@ -30,79 +32,7 @@ const Satellites: Satellite<never>[] = [
     name: 'HStack',
     key: 'HStack',
     description: 'HStack component',
-  },
-  {
-    name: 'Test1',
-    key: 'Test1',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test2',
-    key: 'Test2',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test3',
-    key: 'Test3',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test4',
-    key: 'Test4',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test5',
-    key: 'Test5',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test6',
-    key: 'Test6',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test7',
-    key: 'Test7',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test8',
-    key: 'Test8',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test9',
-    key: 'Test9',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test10',
-    key: 'Test10',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test11',
-    key: 'Test11',
-    description: 'HStack component',
-
-  },
-  {
-    name: 'Test12',
-    key: 'Test12',
-    description: 'HStack component',
-
-  },
+  }
 ];
 const Mantles: Mantle<never>[] = [
   {
@@ -123,16 +53,18 @@ const props = {
   satelliteRadius: 30,
   orbitInterval: 35,
   rotation: 360,
-  onClickSatellite: (satelite) => {
-    console.log(satelite);
-  },
   onClickMantle: (key) => {
     console.log(key);
   },
 };
 
 export function FactoryRingTestEnv({ children }: FactoryRingEnvironmentProps) {
+  const dispatch = useAppDispatch();
+  const clickOnSatellite:(satellite: Satellite<never>) => void = (satelite) => {
+    console.log(satelite);
+    dispatch(addComponent({component:satelite.name,direction:"OuterDown"}));
+  }
   return (
-    <UncontrolledFactoryRing {...props}>{children}</UncontrolledFactoryRing>
+    <UncontrolledFactoryRing onClickSatellite={clickOnSatellite} {...props}>{children}</UncontrolledFactoryRing>
   );
 }

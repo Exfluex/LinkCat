@@ -12,15 +12,17 @@ import {
   Input,
 } from '@chakra-ui/react';
 import { useMotionValue } from 'framer-motion';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { FiPlus } from 'react-icons/fi';
 import { useOutsideClick } from '@chakra-ui/react';
 import { MotionBox, MotionBoxProps, MotionCircle } from '../../../motioned';
 import {  SatelliteManager } from './satellite_manager';
-import { Mantle, MantleManager } from './mantle_manager';
+import {  MantleManager } from './mantle_manager';
 import { FactoryRingSearchBar } from './search_bar';
-import { Satellite } from './satellite_btn';
+
+import { FactoryRingDescriptionBar } from './description_bar';
+import { Mantle, Satellite } from './data';
 //TODO Make it better. Extract it as A individual component
 export interface FactoryRingProps<T> {
   children?: ReactNode;
@@ -36,6 +38,7 @@ export interface FactoryRingProps<T> {
   rotation: number;
   duration: number;
 }
+
 
 export function FactoryRing<T = any>({
   children,
@@ -172,6 +175,7 @@ export function FactoryRing<T = any>({
           rotation={circleBtnAnim.rotate}
         />
       </MotionBox>
+      <FactoryRingDescriptionBar desc={'asadasd'} showing={true}/>
       {isSearching && (
         <FactoryRingSearchBar searchString={searchString}/>
       )}

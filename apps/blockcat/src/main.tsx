@@ -5,12 +5,13 @@ import {store} from './store/store'
 import App from './app/app';
 import { ChakraProvider } from '@chakra-ui/react';
 import 'react-complex-tree/lib/style.css';
+import React from 'react';
+
+
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
-      <ChakraProvider>
-    <App />
-    </ChakraProvider>
+      <ChakraProvider><App /></ChakraProvider>
     </Provider>
   </StrictMode>,
   document.getElementById('root')

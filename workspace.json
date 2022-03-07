@@ -10,6 +10,8 @@
     "core": "libs/core",
     "render-cypress-card-render-component-e2e": "apps/render-cypress/card-render-component-e2e",
     "server": "apps/server",
+    "stack-cat": "apps/stack-cat",
+    "stack-cat-e2e": "apps/stack-cat-e2e",
     "ui": "apps/ui",
     "ui-e2e": "apps/ui-e2e",
     "utils": "libs/utils"

@@ -46,11 +46,19 @@ export class MetaRetrieverPlugin {
       "ftp":"linkcat.buildin.protocol.ftp",
     }
     //定义协议注解，同时定义该注解值为 linkcat.buildin.protocol.ftp等注解
-    scoped.define("linkcat.buildin.protocol", "协议", "linkcat.buildin.protocol.ftp;linkcat.buildin.protocol.http;linkcat.buildin.protocol.https;linkcat.buildin.protocol.file;linkcat.buildin.protocol.unknown", (ctx, payload) => {
+    scoped.define("linkcat.buildin.protocol", "协议",
+    `linkcat.buildin.protocol.ftp;
+    linkcat.buildin.protocol.http;
+    linkcat.buildin.protocol.https;
+    linkcat.buildin.protocol.file;
+    linkcat.buildin.protocol.unknown`, (ctx, payload) => {
       const res = protocolRegex.exec(payload.origin);
       //这里直接填入注解的meta name，LinkCat将自动填入对应注解
+      //Fix Bug here the plugin in https/http scope cannot access protocols here.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      payload.set("linkcat.buildin.protocol",(res)?(protocol[res[1]] as any)??"linkcat.buildin.protocol.unknown":"linkcat.buildin.protocol.unknown");
+      payload.set("linkcat.buildin.protocol",
+          (res)?(protocol[res[1]] as any)??"linkcat.buildin.protocol.unknown"
+                :"linkcat.buildin.protocol.unknown");
     });
     //定义protocol值类型注解，不传入注解解析函数在创建注解是会给true作为值
     scoped.define("linkcat.buildin.protocol.ftp", "文件传输协议", Annotation.BaseTypeDefinition.Boolean);
