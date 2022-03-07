@@ -4,7 +4,7 @@ import { Annotation, Context, Payload } from "@linkcat/core";
 
 export class GithubPlugin{
   constructor(ctx:Context,payload:Payload){
-    let builder = ctx.onPage("resource.origin=https/com/github/www/:AccountOrProject/:Repository").build();
+    const builder = ctx.onPage("resource.origin=https/com/github/www/:AccountOrProject/:Repository").build();
     builder.define("linkcat.github.repository","仓库",Annotation.BaseTypeDefinition.RawText,async (ctx,payload)=>{
       payload.set("linkcat.github.repository",payload.current["resource.origin"]["Repository"]);
     })

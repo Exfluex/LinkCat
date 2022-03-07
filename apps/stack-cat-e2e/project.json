@@ -1,0 +1,28 @@
+{
+  "root": "apps/stack-cat-e2e",
+  "sourceRoot": "apps/stack-cat-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/stack-cat-e2e/cypress.json",
+        "devServerTarget": "stack-cat:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "stack-cat:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/stack-cat-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["stack-cat"]
+}
