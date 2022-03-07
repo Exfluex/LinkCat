@@ -1,13 +1,29 @@
 import { Box, calc, Flex } from '@chakra-ui/react';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import { MotionBox } from '../../../motioned';
-
-export interface Mantle<T> {
-  name: string;
-  key: string;
-  descrption?: string;
-  item?: T;
-}
+import { Mantle } from './data';
+import { Variants } from 'framer-motion';
+import { useEffect, useState } from 'react';
+const MantleVariants: Variants = {
+  Show: ({
+    rotate,
+    mantleRadius,
+    duration,
+  }: {
+    rotate: number;
+    mantleRadius: number;
+    duration: number;
+  }) => ({
+    rotate: rotate,
+    scale: mantleRadius > 0 ? 1 : 0,
+    transition: { duration, delay: 0.5 },
+  }),
+  Hide: {
+    rotate: 0,
+    scale: 0,
+    transition: { duration: 0.5, delay: 0 },
+  },
+};
 
 export interface MantleManagerProps<T> {
   mantles: Mantle<T>[];
@@ -15,7 +31,7 @@ export interface MantleManagerProps<T> {
   rotation: number;
   isOpen: boolean;
   duration: number;
-  onClick:(key:string,item:T)=>void;
+  onClick: (key: string, item: T) => void;
 }
 
 export function MantleManager<T>({
@@ -24,14 +40,18 @@ export function MantleManager<T>({
   rotation,
   isOpen,
   duration,
-  onClick
+  onClick,
 }: MantleManagerProps<T>) {
+  const [phase, setPhase] = useState('Hide');
+  useEffect(() => {
+    setPhase(isOpen ? 'Show' : 'Hide');
+  }, [isOpen]);
   if (mantles.length > 4) {
     console.log('??????');
   }
-  const OnClickWraper = (index:number)=>{
-    onClick(mantles[index].key,mantles[index].item);
-  }
+  const OnClickWraper = (index: number) => {
+    onClick(mantles[index].key, mantles[index].item);
+  };
   const MantleNum = mantles.length;
   const OneMantle = () => (
     <MotionBox
@@ -47,7 +67,9 @@ export function MantleManager<T>({
       borderRightRadius={0}
       left={'0%'}
       top={'0%'}
-      onClick={()=>{OnClickWraper(0)}}
+      onClick={() => {
+        OnClickWraper(0);
+      }}
     ></MotionBox>
   );
   const TwoMantle = () => (
@@ -65,7 +87,9 @@ export function MantleManager<T>({
         borderRightRadius={0}
         left={'0%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(0)}}
+        onClick={() => {
+          OnClickWraper(0);
+        }}
       ></MotionBox>
       <MotionBox
         whileHover={{ scale: 1.1 }}
@@ -80,7 +104,9 @@ export function MantleManager<T>({
         borderLeftRadius={0}
         left={'50%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(1)}}
+        onClick={() => {
+          OnClickWraper(1);
+        }}
       ></MotionBox>
     </>
   );
@@ -99,7 +125,9 @@ export function MantleManager<T>({
         borderRadius={'0 0 100% 0'}
         left={'0%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(0)}}
+        onClick={() => {
+          OnClickWraper(0);
+        }}
       ></MotionBox>
       <MotionBox
         whileHover={{ scale: 1.1 }}
@@ -114,7 +142,9 @@ export function MantleManager<T>({
         borderRadius={'0 0 0 100%'}
         left={'50%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(1)}}
+        onClick={() => {
+          OnClickWraper(1);
+        }}
       ></MotionBox>
       <MotionBox
         whileHover={{ scale: 1.1 }}
@@ -129,7 +159,9 @@ export function MantleManager<T>({
         borderRightRadius={0}
         left={'0%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(2)}}
+        onClick={() => {
+          OnClickWraper(2);
+        }}
       ></MotionBox>
       <MotionBox
         whileHover={{ scale: 1.1 }}
@@ -144,18 +176,18 @@ export function MantleManager<T>({
         borderLeftRadius={0}
         left={'50%'}
         top={'0%'}
-        onClick={()=>{OnClickWraper(3)}}
+        onClick={() => {
+          OnClickWraper(3);
+        }}
       ></MotionBox>
     </>
   );
   return (
     <MotionBox
       pointerEvents={'none'}
-      animate={{
-        rotate: rotation,
-        scale: mantleRadius > 0 ? 1 : 0,
-      }}
-      transition={{ duration, delay: isOpen ? 0.5 : 0 }}
+      animate={phase}
+      custom={{ rotation:rotation, mantleRadius, duration }}
+      variants={MantleVariants}
       position={'absolute'}
       w={`${mantleRadius}px`}
       h={`${mantleRadius}px`}

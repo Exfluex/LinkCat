@@ -50,9 +50,9 @@ export type Direction = "Up" | "Down" | "Left" | "Right"
 export type InnerOutDirection = InnerDirection | OuterDirection | UnknowDirection;
 export type UnknowDirection = "Unknow";
 export type InnerDirection = `Inner${Direction}`;
+export type OuterDirection = `Outer${Direction}`;
 export const InnerDirections: InnerOutDirection[] = ["InnerUp", "InnerDown", "InnerLeft", "InnerRight"];
 export const OuterDirections: InnerOutDirection[] = ["OuterUp", "OuterDown", "OuterLeft", "OuterRight"];
-export type OuterDirection = `Outer${Direction}`;
 export const DirectionMapper: { [direction in InnerOutDirection]: InnerOutDirection } = {
   "Unknow": "Unknow",
   "InnerUp": "InnerUp",

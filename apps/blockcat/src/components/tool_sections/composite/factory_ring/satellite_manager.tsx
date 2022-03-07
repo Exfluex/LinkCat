@@ -1,8 +1,9 @@
 import { Box, Circle } from '@chakra-ui/react';
 import { ReactNode, useEffect, useState } from 'react';
 import { MotionBox, MotionBoxProps } from '../../../motioned';
+import { Satellite } from './data';
 import { OrbitManger } from './orbit_manger';
-import { Satellite, SatelliteBtn, StatelliteRenderer } from './satellite_btn';
+import {  SatelliteBtn, StatelliteRenderer } from './satellite_btn';
 
 export interface SatelliteManagerProps<T> {
   satellites: Satellite<T>[];
