@@ -32,7 +32,7 @@ BlockCat aim to provide:
 - Slottable Component Feature (You can make template)
 
 I'll try my best to make these great feature real in my spare time. 
-## 2022 Mar Plan
+## 2022 May Plan
 
 - Block Cat
   - [x] Basic CRUD Component Ability.
